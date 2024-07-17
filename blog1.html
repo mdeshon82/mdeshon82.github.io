@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post: Navigating the High Seas with Data Science</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Poppins', Helvetica, sans-serif;
+            background-color: #0ba3765;
+            background: -webkit-gradient(linear, left top, left bottom, from(#0b7080), to(#0ba376));
+            background: linear-gradient(#0b7080, #0ba376);
+            color: #d5d5d5;
+            margin: 0;
+            padding: 0;
+        }
+        .menu-bar {
+            background-color: #0ba3765;
+            padding: 10px;
+            text-align: center;
+        }
+        .menu-bar a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #444;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            color: #fff;
+        }
+        p {
+            line-height: 1.6;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background-color: #ffeb3b;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-bar">
+        <a href="https://mattdeshon.com/#home">Return to Main Page</a>
+    </div>
+    <div class="container">
+        <h1>Navigating the High Seas with Data Science – My Capstone Project on Predicting Safe Ocean Crossing Routes</h1>
+        <img src="img/oceannav.jpg" alt="Ocean navigation">
+        <p>As an aspiring data scientist, I recently embarked on a capstone project that combined my passion for marine navigation with cutting-edge data analytics and machine learning techniques. The goal of my project was to predict safe ocean crossing routes by analyzing historical weather data, sea state conditions, and marine AIS data. In this blog post, I'll take you through my journey of collecting, processing, and analyzing this data to develop predictive and optimization models that could potentially save lives at sea.</p>
+        
+        <h2>The Challenge: Ensuring Safe Ocean Crossings</h2>
+        <p>Maritime safety is a critical concern for shipping companies, fishermen, and recreational sailors. Navigating through treacherous waters can be perilous without accurate and timely information about weather conditions, sea state, and ocean currents. My project aimed to tackle this challenge by leveraging data science to predict the safest routes for ocean crossings.</p>
+        <img src="img/safe.jpg" alt="Maritime safety">
+        
+        <h2>Data Collection: Harnessing the Power of Open Data</h2>
+        <p>To build a robust predictive model, I needed a comprehensive dataset that covered various aspects of maritime navigation. Here's how I gathered the necessary data:</p>
+        <ul>
+            <li><strong>Weather Data:</strong> Using NOAA's ERDDAP server, I fetched historical weather data for the last two years for the Atlantic, Pacific, and Indian Oceans. This data included variables like air temperature, wind speed, and precipitation.</li>
+            <li><strong>Marine AIS Data:</strong> I sourced Marine AIS data in CSV format from the US Coast Guard, which provided information on vessel movements and positions.</li>
+            <li><strong>Sea State Data:</strong> For sea state data, including wave height and ocean currents, I utilized NetCDF files from NOAA's ERDDAP server.</li>
+        </ul>
+        <img src="img/data.jpg" alt="Data collection">
+        
+        <h2>Data Processing: From Raw Data to Insights</h2>
+        <p>With the data in hand, the next step was to clean, merge, and preprocess it for analysis. Here's a brief overview of the process:</p>
+        <ul>
+            <li><strong>Downloading and Converting NetCDF Files:</strong> I wrote scripts to download NetCDF files and convert them to CSV format for easier handling in pandas. This involved extracting variables like wave height, air temperature, and ocean currents.</li>
+            <li><strong>Merging Datasets:</strong> Using pandas, I merged the weather, AIS, and sea state datasets based on common attributes like latitude, longitude, and time. This created a comprehensive dataset that encompassed all the necessary variables for analysis.</li>
+            <li><strong>Handling Missing Data:</strong> Ensuring data quality was crucial, so I implemented techniques to handle missing values, such as interpolation and filling with mean values.</li>
+        </ul>
+        <img src="img/process.jpg" alt="Data processing">
+        
+        <h2>Machine Learning: Predicting Safe Routes</h2>
+        <p>With a clean and merged dataset, I moved on to the core of the project  building predictive models to forecast safe ocean crossing routes. I experimented with various machine learning algorithms, including Random Forest, Gradient Boosting, and Neural Networks. Here's a snapshot of the modeling process:</p>
+        <ul>
+            <li><strong>Feature Selection:</strong> I identified key features that influence safe navigation, such as wave height, wind speed, ocean currents, and vessel positions.</li>
+            <li><strong>Model Training and Evaluation:</strong> Splitting the data into training and test sets, I trained multiple models and evaluated their performance using metrics like Root Mean Squared Error (RMSE). The Random Forest model, in particular, showed promising results.</li>
+            <li><strong>Feature Importance Analysis:</strong> To understand the significance of each feature, I analyzed the feature importances from the Random Forest model. This helped me identify the most critical factors influencing safe navigation.</li>
+        </ul>
+        <img src="img/ai.jpg" alt="Machine learning">
+        
+        <h2>Optimization: Finding the Best Routes</h2>
+        <p>Beyond prediction, I aimed to develop an optimization model to suggest the safest routes based on the predicted weather conditions. Using linear programming techniques, I created an optimization model that minimized the risk associated with various routes by considering factors like wave height and current speed.</p>
+        <img src="img/process.jpg" alt="Optimization model">
+        
+        <h2>Visualization: Bringing Insights to Life</h2>
+        <p>To make the insights accessible and actionable, I created interactive dashboards using Tableau and PowerBI. These dashboards visualized the safest routes, weather conditions, and vessel movements, providing an intuitive interface for maritime professionals to plan their journeys.</p>
+        <img src="img/visual.jpg" alt="Visualization">
+        
+        <h2>Conclusion: A Data-Driven Approach to Maritime Safety</h2>
+        <p>This project was a fascinating blend of data science, machine learning, and optimization, all aimed at enhancing maritime safety. By leveraging open data sources and advanced analytics, I was able to develop models that predict safe ocean crossing routes and optimize navigation strategies. The potential applications of this work are vast, from improving shipping efficiency to ensuring the safety of sailors and passengers.</p>
+        <p>As I reflect on this journey, I'm excited about the future possibilities of data science in solving real-world challenges. This project not only honed my technical skills but also deepened my appreciation for the impact that data-driven insights can have on critical industries like maritime navigation.</p>
+        <p>Thank you for joining me on this exploration of the high seas with data science. Stay tuned for more updates and insights from my ongoing journey in the world of data analytics!</p>
+        <p><em>Feel free to share your thoughts and questions in the comments below. I'd love to hear from you!</em></p>
+    </div>
+</body>
+</html>
