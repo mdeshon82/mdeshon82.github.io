@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Post: Navigating the High Seas with Data Science</title>
+    <title>Blog Post: Implementing BGP for Automated Failover in a Multi-Data Center Design</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
@@ -60,41 +60,41 @@
         <a href="https://mattdeshon.com/#home">Return to Main Page</a>
     </div>
     <div class="container">
-        <h1>Navigating the High Seas with Data Science – My Capstone Project on Predicting Safe Ocean Crossing Routes</h1>
+        <h1>Implementing BGP for Automated Failover in a Multi-Data Center Design</h1>
         <img src="img/oceannav.jpg" alt="Ocean navigation">
-        <p>As an aspiring data scientist, I recently embarked on a capstone project that combined my passion for marine navigation with cutting-edge data analytics and machine learning techniques. The goal of my project was to predict safe ocean crossing routes by analyzing historical weather data, sea state conditions, and marine AIS data. In this blog post, I'll take you through my journey of collecting, processing, and analyzing this data to develop predictive and optimization models that could potentially save lives at sea.</p>
+        <p>Overview</p>
         
-        <h2>The Challenge: Ensuring Safe Ocean Crossings</h2>
-        <p>Maritime safety is a critical concern for shipping companies, fishermen, and recreational sailors. Navigating through treacherous waters can be perilous without accurate and timely information about weather conditions, sea state, and ocean currents. My project aimed to tackle this challenge by leveraging data science to predict the safest routes for ocean crossings.</p>
+        <h2>BGP Routing</h2>
+        <p>Ensuring high availability in modern data centers is critical for minimizing downtime and maintaining business continuity. Border Gateway Protocol (BGP) provides a scalable and effective way to manage failover between multiple data centers, offering automated traffic rerouting in the event of a failure. In this article, we will discuss how BGP was implemented and configured to support an automated failover mechanism in a two-data-center design, enhancing the resilience of mission-critical applications.</p>
         <img src="img/safe.jpg" alt="Maritime safety">
         
-        <h2>Data Collection: Harnessing the Power of Open Data</h2>
-        <p>To build a robust predictive model, I needed a comprehensive dataset that covered various aspects of maritime navigation. Here's how I gathered the necessary data:</p>
-        <ul>
-            <li><strong>Weather Data:</strong> Using NOAA's ERDDAP server, I fetched historical weather data for the last two years for the Atlantic, Pacific, and Indian Oceans. This data included variables like air temperature, wind speed, and precipitation.</li>
-            <li><strong>Marine AIS Data:</strong> I sourced Marine AIS data in CSV format from the US Coast Guard, which provided information on vessel movements and positions.</li>
-            <li><strong>Sea State Data:</strong> For sea state data, including wave height and ocean currents, I utilized NetCDF files from NOAA's ERDDAP server.</li>
-        </ul>
+        <h2>Why Use BGP for Data Center Failover with Server Resources?</h2>
+        <p>In addition to routing traffic, it is critical to maintain synchronized server resources in each data center to ensure seamless failover. These server resources, such as database replicas or application servers, play a vital role in maintaining service continuity during failover events. By pairing BGP failover mechanisms with these redundant server resources, we can provide a more robust and reliable solution for high availability.
+
+BGP is a powerful and flexible routing protocol typically used for routing traffic between different autonomous systems (ASes) on the internet. However, within a data center or multi-data-center environment, BGP is also a great tool for managing failover. The primary benefit of using BGP in a two-data-center design is its ability to advertise multiple routes and automatically reroute traffic when one data center or network link goes down. This level of automation significantly reduces downtime and ensures that users experience minimal disruption.</p>
         <img src="img/data.jpg" alt="Data collection">
         
-        <h2>Data Processing: From Raw Data to Insights</h2>
-        <p>With the data in hand, the next step was to clean, merge, and preprocess it for analysis. Here's a brief overview of the process:</p>
-        <ul>
-            <li><strong>Downloading and Converting NetCDF Files:</strong> I wrote scripts to download NetCDF files and convert them to CSV format for easier handling in pandas. This involved extracting variables like wave height, air temperature, and ocean currents.</li>
-            <li><strong>Merging Datasets:</strong> Using pandas, I merged the weather, AIS, and sea state datasets based on common attributes like latitude, longitude, and time. This created a comprehensive dataset that encompassed all the necessary variables for analysis.</li>
-            <li><strong>Handling Missing Data:</strong> Ensuring data quality was crucial, so I implemented techniques to handle missing values, such as interpolation and filling with mean values.</li>
-        </ul>
+        <h2>Implementation and Configuration of BGP for Failover with Server Resources</h2>
+        <p>To create a truly resilient system, BGP configurations were integrated with failover-capable server resources in both data centers. These servers were synchronized to ensure data consistency and application availability in the event of a failover. Below are the steps taken to implement this solution:
+
+The following outlines the steps taken to implement BGP for handling automated failover between two geographically separated data centers. This solution was designed to meet high availability requirements with a focus on simplicity and scalability.</p>
         <img src="img/process.jpg" alt="Data processing">
         
-        <h2>Machine Learning: Predicting Safe Routes</h2>
-        <p>With a clean and merged dataset, I moved on to the core of the project  building predictive models to forecast safe ocean crossing routes. I experimented with various machine learning algorithms, including Random Forest, Gradient Boosting, and Neural Networks. Here's a snapshot of the modeling process:</p>
+        <h2>Step 1: Set Up BGP Sessions Between Data Centers</h2>
+        <p>The first step in the implementation was to establish BGP sessions between the routers in both data centers. Each data center needed to advertise its IP prefixes to the other, and this required configuring BGP on the core routers of each site. For example, each router in both data centers was configured with the following:</p>
         <ul>
-            <li><strong>Feature Selection:</strong> I identified key features that influence safe navigation, such as wave height, wind speed, ocean currents, and vessel positions.</li>
-            <li><strong>Model Training and Evaluation:</strong> Splitting the data into training and test sets, I trained multiple models and evaluated their performance using metrics like Root Mean Squared Error (RMSE). The Random Forest model, in particular, showed promising results.</li>
-            <li><strong>Feature Importance Analysis:</strong> To understand the significance of each feature, I analyzed the feature importances from the Random Forest model. This helped me identify the most critical factors influencing safe navigation.</li>
+            <li><strong>router bgp 65001</strong></li>
+            <li><strong>neighbor 192.168.1.2 remote-as 65002</strong></li>
+            <li><strong>network 10.0.0.0 mask 255.255.255.0</strong></li>
+            
         </ul>
-        <img src="img/ai.jpg" alt="Machine learning">
-        
+        <p>This configuration enabled each router to advertise its internal networks to the other data center, forming the basis of BGP routing. The use of different AS numbers for each data center ensured that BGP could properly distinguish between the two sites.</p>
+        <h2>Step 2: Configure BGP Attributes for Primary and Backup Routes</h2>
+        <p>Next, we configured BGP to prefer one data center over the other by manipulating BGP attributes such as local-preference and AS-path prepending. The primary data center’s routes were given a higher local-preference value to ensure they were chosen first by the BGP routers. For instance:</p>
+         <ul>
+            <li><strong>route-map primary-preference permit 10</strong></li>
+            <li><strong>set local-preference 200</strong></li>
+             
         <h2>Optimization: Finding the Best Routes</h2>
         <p>Beyond prediction, I aimed to develop an optimization model to suggest the safest routes based on the predicted weather conditions. Using linear programming techniques, I created an optimization model that minimized the risk associated with various routes by considering factors like wave height and current speed.</p>
         <img src="img/process.jpg" alt="Optimization model">
