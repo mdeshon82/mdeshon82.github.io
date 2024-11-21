@@ -94,20 +94,47 @@ The following outlines the steps taken to implement BGP for handling automated f
          <ul>
             <li><strong>route-map primary-preference permit 10</strong></li>
             <li><strong>set local-preference 200</strong></li>
+         </ul>
+        <p>This ensured that traffic from the secondary data center would only be routed through the backup site if the primary data center's link went down.</p>
              
-        <h2>Optimization: Finding the Best Routes</h2>
-        <p>Beyond prediction, I aimed to develop an optimization model to suggest the safest routes based on the predicted weather conditions. Using linear programming techniques, I created an optimization model that minimized the risk associated with various routes by considering factors like wave height and current speed.</p>
+        <h2>Step 3: Enable Health Monitoring and Link Failure Detection</h2>
+        <p>For automated failover to work smoothly, it was necessary to configure health checks to detect link failures and BGP session issues. One of the key features used was IP SLA (Service Level Agreement) tracking, which continuously monitors the health of the network paths. In the case of a failure, the IP SLA monitor would trigger a route update and inform BGP to withdraw the failed route, thus ensuring that traffic is rerouted through the backup data center.</p>
+        <ul>
+            <li><strong>ip sla 1</strong></li>
+            <li><strong>icmp-echo 10.0.0.1 source-ip 192.168.1.1</strong></li>
+            <li><strong>frequency 10</strong></li>
+            <li><strong>track 1 ip sla 1 reachability</strong></li>
+            
+        </ul>
+        <p>This configuration allowed the BGP routers to dynamically adjust and select the best available path based on the health of the connections.</p>
         <img src="img/process.jpg" alt="Optimization model">
         
-        <h2>Visualization: Bringing Insights to Life</h2>
-        <p>To make the insights accessible and actionable, I created interactive dashboards using Tableau and PowerBI. These dashboards visualized the safest routes, weather conditions, and vessel movements, providing an intuitive interface for maritime professionals to plan their journeys.</p>
+        <h2>Step 4: Test and Validate the Failover Mechanism</h2>
+        <p>After implementing the BGP configuration and ensuring that server resources were properly synchronized between data centers, several tests were conducted to validate the failover process. These included simulating link failures and performing server load balancing checks to ensure that both traffic rerouting and application availability were unaffected during a failover event. The tests confirmed that the system could handle failover scenarios seamlessly.</p>
+
+        <p>After implementing the BGP configuration, we conducted several tests to validate the failover process. This included simulating link failures between the two data centers to ensure that traffic was automatically rerouted to the secondary site without manual intervention. During testing, BGP successfully detected the failure and updated its routing table within seconds, ensuring continuous service availability.</p>
         <img src="img/visual.jpg" alt="Visualization">
         
-        <h2>Conclusion: A Data-Driven Approach to Maritime Safety</h2>
-        <p>This project was a fascinating blend of data science, machine learning, and optimization, all aimed at enhancing maritime safety. By leveraging open data sources and advanced analytics, I was able to develop models that predict safe ocean crossing routes and optimize navigation strategies. The potential applications of this work are vast, from improving shipping efficiency to ensuring the safety of sailors and passengers.</p>
-        <p>As I reflect on this journey, I'm excited about the future possibilities of data science in solving real-world challenges. This project not only honed my technical skills but also deepened my appreciation for the impact that data-driven insights can have on critical industries like maritime navigation.</p>
-        <p>Thank you for joining me on this exploration of the high seas with data science. Stay tuned for more updates and insights from my ongoing journey in the world of data analytics!</p>
-        <p><em>Feel free to share your thoughts and questions in the comments below. I'd love to hear from you!</em></p>
+        <h2>Challenges and Considerations</h2>
+        <h3>While BGP-based failover is an effective solution, there were several challenges to overcome during the implementation:</h3>
+       <ul>
+            <li><strong>BGP Convergence Time:</strong> Although BGP is relatively fast, there was a noticeable delay during convergence when the primary data center became unavailable. This can impact latency-sensitive applications, so careful monitoring was required.</li>
+            <li><strong>Route Flapping:</strong> If the network paths between data centers are unstable, BGP might experience route flapping, causing temporary disruption in traffic flow. Route flap damping was configured to mitigate this issue.</li>
+            <li><strong>Complexity of Configuration:</strong> BGP configurations, especially when managing attributes like local-preference and AS-path prepending, can become complex in large environments. Proper documentation and testing were critical to success.</li>
+        </ul>
+<h2>Benefits of BGP-Based Failover</h2>
+        <p>Despite these challenges, BGP-based failover offers several distinct advantages:</p>
+        <ul>
+            <li><strong>Automated Failover:</strong> BGP automates the failover process, reducing the risk of human error and ensuring rapid recovery from network failures.</li>
+            <li><strong>Scalability:</strong> BGP is highly scalable, making it ideal for expanding data center networks as the business grows.</li>
+            <li><strong>Redundancy and Reliability:</strong> By utilizing multiple data centers, BGP ensures that traffic can be dynamically routed to the healthiest available path, maximizing uptime and performance.</li>
+        </ul>
+
+        <h2>Conclusion</h2>
+        <p>Implementing BGP to handle automated failover in a two-data-center design has proven to be a highly effective method for ensuring continuous service availability. Through careful configuration and the use of BGP's powerful routing attributes, we were able to create a resilient, fault-tolerant network that automatically adapts to failure scenarios. While challenges like convergence time and configuration complexity exist, the benefits of scalability, redundancy, and automated recovery make BGP an ideal choice for large-scale enterprise environments seeking high availability.</p>
     </div>
 </body>
+    <footer>
+        <p>&copy; 2024 Matt DeShon. All rights reserved.</p>
+    </footer>
 </html>
