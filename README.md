@@ -21,3 +21,8 @@ This is a responsive and modern resume site designed to showcase my professional
 - **Dynamic Portfolio**: Interactive cards for projects.
 - **GitHub Integration**: Links to repositories and contribution highlights.
 - **Minimalistic Aesthetic**: Clean and professional design.
+
+
+## ✨ Privacy Policy
+
+Please visit our privacy policy here. [Privacy Policy](https://www.mattdeshon.com/privacy-policy.html)
