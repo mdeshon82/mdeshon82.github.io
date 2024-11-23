@@ -61,7 +61,7 @@
     </div>
     <div class="container">
         <h1>Implementing BGP for Automated Failover in a Multi-Data Center Design</h1>
-        <img src="img/pic1.jpg" alt="Ocean navigation">
+        <img src="/img/pic1.jpg" alt="Ocean navigation">
         <p>Overview</p>
         
         <h2>BGP Routing</h2>
@@ -78,7 +78,7 @@ BGP is a powerful and flexible routing protocol typically used for routing traff
         <p>To create a truly resilient system, BGP configurations were integrated with failover-capable server resources in both data centers. These servers were synchronized to ensure data consistency and application availability in the event of a failover. Below are the steps taken to implement this solution:
 
 The following outlines the steps taken to implement BGP for handling automated failover between two geographically separated data centers. This solution was designed to meet high availability requirements with a focus on simplicity and scalability.</p>
-        <img src="img/pic2.jpg" alt="Data processing">
+        <img src="/img/pic2.jpg" alt="Data processing">
         
         <h2>Step 1: Set Up BGP Sessions Between Data Centers</h2>
         <p>The first step in the implementation was to establish BGP sessions between the routers in both data centers. Each data center needed to advertise its IP prefixes to the other, and this required configuring BGP on the core routers of each site. For example, each router in both data centers was configured with the following:</p>
@@ -112,7 +112,7 @@ The following outlines the steps taken to implement BGP for handling automated f
         <p>After implementing the BGP configuration and ensuring that server resources were properly synchronized between data centers, several tests were conducted to validate the failover process. These included simulating link failures and performing server load balancing checks to ensure that both traffic rerouting and application availability were unaffected during a failover event. The tests confirmed that the system could handle failover scenarios seamlessly.</p>
 
         <p>After implementing the BGP configuration, we conducted several tests to validate the failover process. This included simulating link failures between the two data centers to ensure that traffic was automatically rerouted to the secondary site without manual intervention. During testing, BGP successfully detected the failure and updated its routing table within seconds, ensuring continuous service availability.</p>
-        <img src="img/pic4.avif" alt="Visualization">
+        <img src="/img/pic4.avif" alt="Visualization">
         
         <h2>Challenges and Considerations</h2>
         <h3>While BGP-based failover is an effective solution, there were several challenges to overcome during the implementation:</h3>
