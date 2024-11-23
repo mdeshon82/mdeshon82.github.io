@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="author" content="Matt Deshon">
+    <meta name="description" content="Matt DeShon ISS SSTV Blog" />
+    <meta name="keywords" content="cisco, it, computer, network, sailing, sstv, iss, nasa, ham, sdr, rtl-sdr, navigation, wireless, finance, bank, wifi, RF, blog, portfolio, robotics, electronics, engineering, repair, technology, managed, service, security" />
+    <link rel="shortcut icon" href="/img/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+    <link rel="icon" type="img/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="img/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post: Capturing an SSTV Image from the ISS in My Backyard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Poppins', Helvetica, sans-serif;
+            background-color: #0ba3765;
+            background: -webkit-gradient(linear, left top, left bottom, from(#0b7080), to(#0ba376));
+            background: linear-gradient(#0b7080, #0ba376);
+            color: #d5d5d5;
+            margin: 0;
+            padding: 0;
+        }
+        .menu-bar {
+            background-color: #0ba3765;
+            padding: 10px;
+            text-align: center;
+        }
+        .menu-bar a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #444;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            color: #fff;
+        }
+        p {
+            line-height: 1.6;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background-color: #ffeb3b;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-bar">
+        <a href="https://mattdeshon.com/#home">Return to Main Page</a>
+    </div>
+    <div class="container">
+        <h1>Capturing an SSTV Image from the ISS in My Backyard</h1>
+        <img src="/img/space-station.jpg" alt="Space Station">
+        
+        <p>Last night, I had one of those quintessential geeky moments where technology, curiosity, and a bit of luck all came together. Armed with nothing more than my trusty RTL-SDR dongle, a makeshift antenna, and some free software, I set out to capture an SSTV (Slow Scan Television) image from the International Space Station (ISS) as it passed over my backyard.</p>
+        
+        
+        <h2>A Perfect Evening for ISS Spotting</h2>
+
+        <p>The timing couldn't have been better. The passover was at dusk, a magical time when the ISS catches sunlight and glints like a fast-moving star against the deepening blue of the sky. It's always a thrill to spot it, knowing there are humans aboard, orbiting Earth at 17,500 mph.</p>
+        
+        <p>This particular pass had an added challenge: my neighbor’s house blocked the ISS for a good portion of the trajectory. I knew I wouldn’t get a complete image, but I decided to try anyway. After all, even partial success would be exciting.</p>
+        
+        <h2>The Gear and Setup</h2>
+        <p>Here’s what I used:</p>
+        <ul>
+            <li><strong>RTL-SDR dongle:</strong> A budget-friendly software-defined radio that opens up a world of listening possibilities.</li>
+            <li><strong>DIY antenna:</strong> My go-to V-dipole rigged for 145.8 MHz, the frequency the ISS transmits SSTV on during special events.</li>
+            <li><strong>Software:</strong>SDR# for tuning and MMSSTV for decoding the signal into an image. I connected everything to my laptop, dialed in the frequency, and waited for the pass.</li>
+            
+        </ul>
+
+        <img src="/img/ham-pic1.jpg" alt="Ham Radio">
+        
+        <h2>The Magic of SSTV</h2>
+        
+        <p>As the ISS rose above the horizon, the faint hiss of static in my headphones began to give way to the characteristic tones of SSTV. It’s a kind of audio magic: those warbling signals transform into colorful, pixelated images.</p>
+
+        <p>The ISS's signal was strong at first, but soon dipped behind my neighbor’s roof. I lost chunks of the transmission, resulting in a blank section across the middle of the image. By the time the ISS reappeared, the signal was weaker as it headed toward the horizon, but I managed to capture enough to see a partial SSTV image.</p>
+       
+        <img src="/img/iss1.jpg" alt="ISS Image 1">
+        <img src="/img/iss2.jpg" alt="ISS Image 2">
+        
+        <h2>A Memorable Result</h2>
+
+        <p>The image wasn’t perfect—far from it. But the beauty was in the experience: tracking the ISS, marveling at its bright solar panels reflecting the sun, and decoding its transmissions from space right in my backyard.</p>
+       
+        <p>Even with the interruption, it was thrilling to watch an image slowly materialize on my screen, knowing it was beamed down directly from space. It reminded me that with just a bit of ingenuity, anyone can connect to the vast, incredible world of amateur radio and space exploration.</p>
+        
+        <h2>What’s Next?</h2>
+
+        <p>I’m already planning for the next ISS SSTV event, this time scouting for a better location with a clearer view of the horizon. If you’ve never tried receiving signals from the ISS or other satellites, I highly recommend giving it a go. With an RTL-SDR, some free software, and a little patience, you can unlock the mysteries of the skies—right from your own backyard.</p>
+    </div>
+</body>
+    <footer>
+        <p>&copy; 2024 Matt DeShon. All rights reserved.</p>
+    </footer>
+</html>
