@@ -4,7 +4,7 @@ Welcome to my personal resume site hosted on GitHub Pages via CloudFlare! This r
 
 ## 🌐 Live Website
 
-You can view my resume site here: [YourWebsiteURL](https://www.mattdeshon.com)
+You can view my resume site here: [My Website](https://www.mattdeshon.com)
 
 ## 📋 Overview
 
