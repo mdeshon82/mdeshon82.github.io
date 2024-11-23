@@ -1459,7 +1459,7 @@ textarea.form-control, textarea.form-control:focus {
 }
 
 
-/* --- Portfolio --- */
+/* /* --- Portfolio --- 
 .portfolio-filters {
   margin-bottom: 30px;
 }
@@ -1633,7 +1633,7 @@ textarea.form-control, textarea.form-control:focus {
 .portfolio-grid figure:hover .category {
   opacity: 1;
 }
-/* --- End of Portfolio --- */
+--- End of Portfolio --- */ 
 
 /* --- Blog --- */
 .blog-masonry {
