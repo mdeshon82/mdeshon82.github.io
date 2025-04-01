@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VT2MXMMRTW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VT2MXMMRTW');
+</script>
+    <meta name="author" content="Matt Deshon">
+    <meta name="description" content="Matt DeShon Website Pipline" />
+    <meta name="keywords" content="cisco, it, computer, network, github, cloudflare, website, pipline, wireless, finance, bank, wifi, RF, blog, portfolio, robotics, electronics, engineering, repair, voice, voip, technology, managed, service, security" />
+    <link rel="shortcut icon" href="/img/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+    <link rel="icon" type="img/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="img/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Troubleshooting Voice Quality Issues in a Large Enterprise Network: A Deep Dive into LLDP and QoS</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Poppins', Helvetica, sans-serif;
+            background-color: #0ba3765;
+            background: -webkit-gradient(linear, left top, left bottom, from(#0b7080), to(#0ba376));
+            background: linear-gradient(#0b7080, #0ba376);
+            color: #d5d5d5;
+            margin: 0;
+            padding: 0;
+        }
+        .menu-bar {
+            background-color: #0ba3765;
+            padding: 10px;
+            text-align: center;
+        }
+        .menu-bar a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #444;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            color: #fff;
+        }
+        p {
+            line-height: 1.6;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background-color: #ffeb3b;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-bar">
+        <a href="https://mattdeshon.com/#home">Return to Main Page</a>
+    </div>
+    <div class="container">
+        <h1>Troubleshooting Voice Quality Issues in a Large Enterprise Network: A Deep Dive into LLDP and QoS</h1>
+        <img src="/img/voip.png" alt="voip">
+        
+        <p>In the world of enterprise networking, voice quality issues can be some of the most elusive and frustrating problems to diagnose. Recently, I faced a challenge that stumped multiple teams: degraded VoIP performance across a large enterprise network. Callers reported choppy audio, dropped calls, and inconsistent quality—issues that persisted despite initial efforts to pinpoint the cause. After diving deep into the problem, the root cause turned out to be a subtle yet critical failure: the network switches had stopped sending LLDP packets containing the Type-Length-Value (TLV) fields for Voice VLAN ID and DSCP priority. Here’s how we unraveled this mystery through methodical troubleshooting, packet captures, and analysis—and what other teams can learn from the experience.</p>
+        
+        
+        <h2>The Initial Problem: Voice Quality Complaints</h2>
+
+            <p>The issue surfaced when helpdesk tickets started piling up from users across multiple sites. The complaints were consistent: VoIP calls sounded garbled, experienced delays, or dropped entirely. Initial checks by the telephony team ruled out issues with the PBX system or the VoIP provider. The network operations team then stepped in, verifying basic connectivity, bandwidth utilization, and latency. Everything seemed within normal limits—no obvious red flags like high CPU usage on routers or packet loss reported by monitoring tools. Yet, the problem persisted.</p>
+
+            <p>At this point, I was brought in to take a closer look. With multiple teams unable to crack the case, it was clear we needed to dig deeper than the usual surface-level checks.</p>
+
+        <h2>Step 1: Narrowing the Scope</h2>
+
+            <p>The first task was to gather more context. Were all sites affected, or just specific ones? Were certain phone models or user groups hit harder? After correlating the tickets with network topology, I found the issues spanned multiple locations but were tied to specific switch stacks in the access layer—where IP phones connect. This pointed to a potential issue in the LAN rather than the WAN or telephony infrastructure.</p>
+
+            <p>I started with the basics:</p>
+        <ul>
+            <li><strong>Physical Layer Checks: </strong>Confirmed cabling and phone power (PoE) were intact.</li>
+            <li><strong>Switch Configs: </strong>Reviewed configurations for Voice VLANs and Quality of Service (QoS) policies. The switches were set to tag voice traffic with a dedicated VLAN (e.g., VLAN 20) and apply DSCP values (typically EF, DSCP 46) for prioritization.</li>
+            <li><strong>Logs and Alerts: </strong>Checked switch logs for errors or anomalies—nothing stood out.</li>
+        </ul>
+
+            <p>Everything looked fine on paper, but the symptoms suggested traffic wasn’t being handled as expected</p>
+        
+        <img src="/img/closet.png" alt="closet">
+        
+        <h2>Step 2: Packet Captures — Finding The Truth</h2>
+
+            <p>When configs and logs don’t tell the full story, it’s time to see what’s actually happening on the wire. I decided to perform packet captures at key points in the network:</p>
+
+        <ul>
+            <li><strong>Between the IP Phone and the Switch: </strong>Using a SPAN port on the access switch to mirror traffic from a test phone.</li>
+            <li><strong>Between the Switch and the Upstream Core: </strong>To see how voice traffic was exiting the access layer.</li>
+        </ul>
+
+       <img src="/img/pcap.png" alt="capture">
+        
+            <p>I fired up Wireshark and placed a test call. The first thing I noticed was that RTP (Real-Time Protocol) packets—the backbone of VoIP audio—were present, but their behavior was odd. Latency and jitter weren’t excessive, yet audio quality was still poor. Digging into the packet details, I saw that the DSCP markings on the RTP packets were inconsistent—some were marked as EF (DSCP 46), while others were defaulting to 0 (best-effort). This was a clue: QoS wasn’t being applied uniformly.</p>
+       
+            <p>Next, I checked the VLAN tagging. Most RTP packets were correctly tagged with the Voice VLAN ID, but something felt off about the phone’s initial setup. IP phones rely on discovery protocols like LLDP (Link Layer Discovery Protocol) or CDP (Cisco Discovery Protocol) to learn their Voice VLAN and QoS settings from the switch. Time to investigate that handshake.</p>
+
+        <h2>Step 3: Analyzing LLDP and TLVs</h2>
+
+            <p>I filtered the capture for LLDP packets, which the switches were configured to send to phones for auto-configuration. To my surprise, the LLDP advertisements were present—but incomplete. Drilling into the TLV fields, I found the culprits:</p>
+
+        <ul>
+            <li><strong>Missing Voice VLAN TLV: </strong>The switch wasn’t advertising the Voice VLAN ID. Without this, some phones might fall back to the data VLAN, mixing voice and data traffic.</li>
+            <li><strong>Missing or Corrupted QoS TLV: </strong>The DSCP priority (e.g., EF) wasn’t being communicated reliably, leaving phones to either guess the marking or skip it entirely.</li>
+        </ul>
+
+            <p>To confirm, I compared the captures against a known-good switch from an unaffected site. The healthy switch consistently sent LLDP packets with both the Voice VLAN TLV (e.g., VLAN 20) and the QoS TLV (DSCP 46). The problematic switches, however, either omitted these fields or sent malformed packets.</p>
+
+            <h2>Step 4: Root Cause and Validation</h2>
+
+            <p>The LLDP failure explained the symptoms perfectly. Without proper Voice VLAN assignment, some phones were sending traffic on the wrong VLAN, leading to contention with data traffic. Without DSCP markings, QoS policies couldn’t prioritize voice packets, causing jitter and drops during congestion—however slight. But why had LLDP broken?</p>
+
+            <p>I checked the switch firmware and found a mix of versions across the affected stacks. A quick search revealed a known bug in one version that caused LLDP TLVs to stop transmitting under certain conditions (e.g., after a reboot or high CPU load). Cross-referencing with change logs, I confirmed a recent maintenance window had upgraded some switches—but not all—to this buggy release.</p>
+       
+            <p>To validate, I rolled back the firmware on a test switch, rebooted it, and recaptured the traffic. Sure enough, the LLDP packets now included the Voice VLAN and DSCP TLVs, and a test call sounded crystal clear.</p>    
+        
+        <h2>Step 3: Analyzing LLDP and TLVs</h2>
+
+            <p>With the root cause identified, we planned a coordinated fix:</p>
+
+            <ul>
+                <li><strong>Firmware Rollback: </strong>Downgraded all affected switches to a stable version via Ansible scripts</li>
+                <li><strong>Config Verification: </strong>Ensured LLDP was explicitly enabled with Voice VLAN and QoS TLVs defined.</li>
+                <li><strong>Monitoring: </strong>Added alerts for LLDP anomalies and QoS marking drops in their network monitoring system.</li>
+            </ul>
+        <img src="/img/pcap_withvaule.png" alt="capture">
+
+        <p>Post-fix, voice quality returned to normal, and the ticket storm subsided. The experience highlighted a few key takeaways for troubleshooting complex network issues:</p>
+       
+        <ul>
+            <li><strong>Don’t Trust Assumptions: </strong>My favorite one here. Other teams assumed QoS and VLANs were working because the configs looked right. Packet captures revealed the truth.</li>
+            <li><strong>Layered Approach: </strong>Start broad (scope, configs, logs), then go deep (captures, protocol analysis).</li>
+            <li><strong>Discovery Protocols Matter: </strong>LLDP and CDP are critical for VoIP—don’t overlook them.</li>
+            <li><strong>Firmware Matters: </strong>Subtle bugs can wreak havoc, especially in large environments.</li>
+        </ul>
+    
+        <h2>Conclusion</h2>
+    
+        <p>This case was a reminder of how interconnected modern networks are—and how a small failure, like missing LLDP TLVs, can cascade into a big problem. By combining systematic troubleshooting with packet-level analysis, we not only fixed the issue but also equipped the team with better tools and awareness for the future. Next time voice quality dips, I’ll know exactly where to start: right at the wire.</p>
+    
+    </div>
+
+</body>
+    <footer style="text-align: center;">
+    <p>&copy; 2025 Matt DeShon. All rights reserved.</p>
+  </footer>
+</html>
