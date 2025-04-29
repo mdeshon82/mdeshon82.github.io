@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Matt Deshon's professional portfolio and personal website">
+  <meta name="keywords" content="Matt Deshon, portfolio, network engineer, automation, data center networking, wireless, RoCE, FinTech">
+  <meta name="author" content="Matt Deshon">
+  <title>Matt Deshon | Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    html, body, #root { height: 100%; margin: 0; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <div id="fallback" style="display: none; text-align: center; padding: 20px;">
+    <h1>Loading...</h1>
+    <p>If this persists, please check the browser console (F12) for errors.</p>
+  </div>
+  <script type="text/babel" data-presets="react">
+    const ErrorBoundary = ({ children }) => {
+      try {
+        return children;
+      } catch (error) {
+        console.error('Render error:', error);
+        return <div style={{ textAlign: 'center', padding: '20px', color: 'red' }}>
+          <h1>Error Rendering Page</h1>
+          <p>Please check the console (F12) for details.</p>
+        </div>;
+      }
+    };
+
+    const Nav = () => (
+      <nav className="bg-white shadow-md sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <h1 className="text-xl font-bold">Matt Deshon</h1>
+            </div>
+            <div className="flex items-center space-x-4">
+              <a href="#home" className="text-gray-600 hover:text-blue-600">Home</a>
+              <a href="#about" className="text-gray-600 hover:text-blue-600">About</a>
+              <a href="#portfolio" className="text-gray-600 hover:text-blue-600">Portfolio</a>
+              <a href="#contact" className="text-gray-600 hover:text-blue-600">Contact</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    );
+
+    const Hero = () => (
+      <section id="home" className="bg-gray-100 py-20 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <img src="pic/main_photo.jpeg" alt="Matt Deshon" className="w-32 h-32 rounded-full mx-auto mb-4" />
+          <h1 className="text-4xl font-bold text-gray-900">Hi, I'm Matt Deshon</h1>
+          <p className="text-xl text-gray-600 mt-2">Network Engineer | Automation Expert</p>
+          <a href="#portfolio" className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">View My Work</a>
+        </div>
+      </section>
+    );
+
+    const About = () => (
+      <section id="about" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-gray-900 text-center">About Me</h2>
+          <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
+            I'm a Network Engineer who builds resilient, high-performance networks for data centers and FinTech systems. I lead with automation, leveraging Ansible and Terraform to create scalable, efficient infrastructure. My expertise spans cutting-edge technologies like hyperconverged infrastructure, RDMA/RoCE, Priority Flow Control, VXLAN with EVPN, Precision Time Protocol, Mac/TrustSEC and Time-Triggered Ethernet. I deliver seamless wireless connectivity for even the most demanding environments. From optimizing networks for robotic systems to driving speed and reliability for financial platforms, I engineer secure, future-ready solutions that solve complex challenges — and I do it with precision and purpose.
+          </p>
+          <div className="mt-6 text-center">
+            <a href="https://www.linkedin.com/in/mattdeshon/" target="_blank" className="text-blue-600 hover:underline">LinkedIn</a> | 
+            <a href="https://github.com/mdeshon82" target="_blank" className="text-blue-600 hover:underline ml-2">GitHub</a>
+          </div>
+        </div>
+      </section>
+    );
+
+    const Portfolio = () => (
+      <section id="portfolio" className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-gray-900 text-center">Portfolio</h2>
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { title: "Project 1", desc: "Data Center Failover Automation", link: "https://www.mattdeshon.com/blog/bgp" },
+              { title: "Project 2", desc: "Streamlining Website Updates with Cloudflare Pages and GitHub", link: "https://mattdeshon.com/blog/blog3" },
+              { title: "Project 3", desc: "Navigating the High Seas with Data Science", link: "https://mattdeshon.com/blog/blog1" },
+            ].map((project, index) => (
+              <div key={index} className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                <h3 className="text-xl font-semibold text-gray-900">{project.title}</h3>
+                <p className="mt-2 text-gray-600">{project.desc}</p>
+                <a href={project.link} className="mt-4 inline-block text-blue-600 hover:underline">View Project</a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+
+    const Contact = () => (
+      <section id="contact" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-gray-900 text-center">Get in Touch</h2>
+          <div className="mt-10 max-w-lg mx-auto">
+            <div className="space-y-4">
+              <input type="text" placeholder="Your Name" className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" />
+              <input type="email" placeholder="Your Email" className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" />
+              <textarea placeholder="Your Message" className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" rows="4"></textarea>
+              <button className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">Send Message</button>
+            </div>
+            <div className="mt-6 text-center">
+              <p className="text-gray-600">Or connect with me on:</p>
+              <div className="flex justify-center space-x-4 mt-2">
+                <a href="https://www.linkedin.com/in/mattdeshon/" target="_blank"><i className="fab fa-linkedin text-2xl text-blue-600"></i></a>
+                <a href="https://github.com/mdeshon82" target="_blank"><i className="fab fa-github text-2xl text-blue-600"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+
+    const Footer = () => (
+      <footer className="bg-gray-800 py-6 text-white text-center">
+        <p>© 2025 Matt Deshon. All rights reserved.</p>
+      </footer>
+    );
+
+    const App = () => (
+      <ErrorBoundary>
+        <div>
+          <Nav />
+          <Hero />
+          <About />
+          <Portfolio />
+          <Contact />
+          <Footer />
+        </div>
+      </ErrorBoundary>
+    );
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
