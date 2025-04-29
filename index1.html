@@ -152,7 +152,7 @@
           <h2 className="text-3xl font-bold text-gray-900 text-center sm:text-4xl">Certifications</h2>
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {[
-              { title: "Cisco", desc: "CCNA", Thor: "Cisco", link: null },
+              { title: "Cisco", desc: "CCNA", link: null },
               { title: "Cisco", desc: "AI Solutions on Cisco Infrastructure Essentials (DCAIE)", link: null },
               { title: "Axelos", desc: "ITIL v4", link: null },
               { title: "Microsoft", desc: "AI Fundamentals", link: null },
@@ -211,12 +211,26 @@
       const handleSubmit = async (e) => {
         e.preventDefault();
         setStatus('Sending...');
+        console.log('Submitting form:', formData); // Debug
         try {
-          await new Promise((resolve) => setTimeout(resolve, 1000)); // Mock API call
-          setStatus('Message sent successfully!');
-          setFormData({ name: '', email: '', message: '' });
+          const response = await fetch('https://formspree.io/f/xrbqelab', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: JSON.stringify(formData),
+          });
+          if (response.ok) {
+            setStatus('Message sent successfully! Check your email.');
+            setFormData({ name: '', email: '', message: '' });
+            console.log('Form submission successful'); // Debug
+          } else {
+            throw new Error('Form submission failed');
+          }
         } catch (error) {
           setStatus('Failed to send message. Please try again.');
+          console.error('Form submission error:', error); // Debug
         }
       };
 
