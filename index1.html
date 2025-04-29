@@ -46,6 +46,7 @@
             <div className="flex items-center space-x-4">
               <a href="#home" className="text-gray-600 hover:text-blue-600">Home</a>
               <a href="#about" className="text-gray-600 hover:text-blue-600">About</a>
+              <a href="#Certifications" className="text-gray-600 hover:text-blue-600">Certifications</a>
               <a href="#portfolio" className="text-gray-600 hover:text-blue-600">Portfolio</a>
               <a href="#contact" className="text-gray-600 hover:text-blue-600">Contact</a>
             </div>
@@ -75,6 +76,34 @@
           <div className="mt-6 text-center">
             <a href="https://www.linkedin.com/in/mattdeshon/" target="_blank" className="text-blue-600 hover:underline">LinkedIn</a> | 
             <a href="https://github.com/mdeshon82" target="_blank" className="text-blue-600 hover:underline ml-2">GitHub</a>
+          </div>
+        </div>
+      </section>
+    );
+    
+    const Certifications = () => (
+      <section id="Certifications" className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-gray-900 text-center">Portfolio</h2>
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { title: "Cisco", desc: "CCNA", link: "#" },
+              { title: "Cisco", desc: "AI Solutions on Cisco Infrastructure Essentials (DCAIE)", link: "#" },
+              { title: "Axelos", desc: "ITIL v4", link: "#" },
+              { title: "Microsoft", desc: "AI Fundamentals", link: "#" },
+              { title: "FCC", desc: "Amateur Radio General Class", link: "#" },
+              { title: "NOCTI", desc: "Electronics", link: "#" },
+              { title: "BCTC", desc: "Robotics Automation Technician", link: "#" },
+              { title: "BCTC", desc: "Automation Technician", link: "#" },
+              { title: "BCTC", desc: "Electronics Technician", link: "#" },
+              { title: "IBM", desc: "Artificial Intelligence Fundamentals", link: "#" },
+            ].map((project, index) => (
+              <div key={index} className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                <h3 className="text-xl font-semibold text-gray-900">{project.title}</h3>
+                <p className="mt-2 text-gray-600">{project.desc}</p>
+                <a href={project.link} className="mt-4 inline-block text-blue-600 hover:underline">View Project</a>
+              </div>
+            ))}
           </div>
         </div>
       </section>
