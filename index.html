@@ -1,1213 +1,331 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js">
-  <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VT2MXMMRTW"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Matt DeShon's professional portfolio and personal website">
+  <meta name="keywords" content="Matt DeShon, portfolio, network engineer, automation, data center networking, wireless, RoCE, FinTech">
+  <meta name="author" content="Matt DeShon">
+  <meta property="og:title" content="Matt DeShon | Portfolio" />
+  <meta property="og:description" content="Matt DeShon's professional portfolio and personal website" />
+  <meta property="og:image" content="/img/main_photo.jpeg" />
+  <meta property="og:url" content="https://www.mattDeShon.com" />
+  <title>Matt DeShon | Portfolio</title>
+  <link rel="icon" href="/favicon.ico" />
+  <!-- CDN Dependencies -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.26.9/babel.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    html, body, #root { height: 100%; margin: 0; }
+    html { scroll-behavior: smooth; }
+    .loading-spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <div id="fallback" style={{ textAlign: 'center', padding: '20px' }}>
+    <div className="loading-spinner"></div>
+    <p>Loading... If this persists, please check the browser console (F12) for errors.</p>
+  </div>
+  <script type="text/babel" data-presets="react">
+    console.log('Script started'); // Debug: Confirm script runs
 
-  gtag('config', 'G-VT2MXMMRTW');
-</script>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
-    <title>Matt DeShon</title>
-    <meta name="author" content="Matt Deshon">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="Matt DeShon Portfolio" />
-    <meta name="keywords" content="cisco, it, computer, network, wireless, finance, bank, wifi, RF, blog, portfolio, robotics, electronics, engineering, repair, technology, managed, service, security" />
-    <link rel="shortcut icon" href="img/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
-    <link rel="icon" type="img/png" sizes="32x32" href="img/favicon-32x32.png">
-    <link rel="icon" type="img/png" sizes="16x16" href="img/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
+    class ErrorBoundary extends React.Component {
+      state = { hasError: false, error: null };
 
-    <meta property="og:title" content="Matt Deshon - Versatile Tech Professional">
-    <meta property="og:description" content="Versatile Tech Professional.">
-    <meta property="og:image" content="https://www.mattdeshon.com/img/ai.jpg">
-    <meta property="og:url" content="https://www.mattdeshon.com">
-    <meta property="og:type" content="website">
+      static getDerivedStateFromError(error) {
+        return { hasError: true, error };
+      }
 
-    <link rel="stylesheet" href="css/reset.css" type="text/css">
-    <link rel="stylesheet" href="css/bootstrap-grid.min.css" type="text/css">
-    <link rel="stylesheet" href="css/animations.css" type="text/css">
-    <link rel="stylesheet" href="css/perfect-scrollbar.css" type="text/css">
-    <link rel="stylesheet" href="css/owl.carousel.css" type="text/css">
-    <link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
-    <link rel="stylesheet" href="css/main.css" type="text/css">
-  </head>
+      componentDidCatch(error, errorInfo) {
+        console.error('Render error:', error, errorInfo);
+      }
 
-  <body>
-    <!-- Animated Background -->
-    <div class="lm-animated-bg" style="background-image: url(img/main_bg.png);"></div>
-    <!-- /Animated Background -->
+      render() {
+        if (this.state.hasError) {
+          return (
+            <div style={{ textAlign: 'center', padding: '20px', color: 'red' }}>
+              <h1>Error Rendering Page</h1>
+              <p>{this.state.error?.message || 'Unknown error. Please check the console (F12) for details.'}</p>
+            </div>
+          );
+        }
+        return this.props.children;
+      }
+    }
 
-    <!-- Loading animation -->
-    <div class="preloader">
-      <div class="preloader-animation">
-        <div class="preloader-spinner">
+    const Nav = () => {
+      const [isOpen, setIsOpen] = React.useState(false);
+
+      return (
+        <nav className="bg-white shadow-md sticky top-0 z-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between h-16">
+              <div className="flex items-center">
+                <h1 className="text-xl font-bold">Matt DeShon</h1>
+              </div>
+              <div className="hidden md:flex items-center space-x-4">
+                <a href="#home" className="text-gray-600 hover:text-blue-600" aria-label="Home">Home</a>
+                <a href="#about" className="text-gray-600 hover:text-blue-600" aria-label="About">About</a>
+                <a href="#Certifications" className="text-gray-600 hover:text-blue-600" aria-label="Certifications">Certifications</a>
+                <a href="#portfolio" className="text-gray-600 hover:text-blue-600" aria-label="Portfolio">Portfolio</a>
+                <a href="#contact" className="text-gray-600 hover:text-blue-600" aria-label="Contact">Contact</a>
+              </div>
+              <div className="md:hidden flex items-center">
+                <button onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
+                  <i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'} text-2xl`}></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          {isOpen && (
+            <div className="md:hidden">
+              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" className="block text-gray-600 hover:text-blue-600 px-3 py-2" aria-label="Home">Home</a>
+                <a href="#about" className="block text-gray-600 hover:text-blue-600 px-3 py-2" aria-label="About">About</a>
+                <a href="#Certifications" className="block text-gray-600 hover:text-blue-600 px-3 py-2" aria-label="Certifications">Certifications</a>
+                <a href="#portfolio" className="block text-gray-600 hover:text-blue-600 px-3 py-2" aria-label="Portfolio">Portfolio</a>
+                <a href="#contact" className="block text-gray-600 hover:text-blue-600 px-3 py-2" aria-label="Contact">Contact</a>
+              </div>
+            </div>
+          )}
+        </nav>
+      );
+    };
+
+    const Hero = () => (
+      <section id="home" className="bg-gray-100 py-20 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <img
+            src="img/main_photo.jpeg"
+            alt="Matt DeShon"
+            className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+            loading="lazy"
+            onError={(e) => (e.target.src = 'https://via.placeholder.com/128')}
+          />
+          <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">Hi, I'm Matt DeShon</h1>
+          <p className="text-xl text-gray-600 mt-2 sm:text-2xl">Network Engineer | Automation Expert</p>
+          <a
+            href="#portfolio"
+            className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
+          >
+            View My Work
+          </a>
         </div>
-      </div>
-    </div>
-    <!-- /Loading animation -->
+      </section>
+    );
 
-    <div class="page">
-      <div class="page-content">
+    const About = () => (
+      <section id="about" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-gray-900 text-center sm:text-4xl">About Me</h2>
+          <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            I'm a Network Engineer who builds resilient, high-performance networks for data centers and FinTech systems. I lead with automation, leveraging Ansible and Terraform to create scalable, efficient infrastructure. My expertise spans cutting-edge technologies like hyperconverged infrastructure, RDMA/RoCE, Priority Flow Control, VXLAN with EVPN, Precision Time Protocol, Mac/TrustSEC, and Time-Triggered Ethernet. I deliver seamless wireless connectivity for even the most demanding environments. From optimizing networks for robotic systems to driving speed and reliability for financial platforms, I engineer secure, future-ready solutions that solve complex challenges — and I do it with precision and purpose.
+          </p>
+          <div className="mt-6 text-center">
+            <a href="https://www.linkedin.com/in/mattDeShon/" target="_blank" className="text-blue-600 hover:underline" aria-label="LinkedIn">LinkedIn</a> | 
+            <a href="https://github.com/mDeShon82" target="_blank" className="text-blue-600 hover:underline ml-2" aria-label="GitHub">GitHub</a>
+          </div>
+        </div>
+      </section>
+    );
 
-          <header id="site_header" class="header mobile-menu-hide">
-            <div class="header-content">
-              <div class="header-photo">
-                <img src="img/main_photo.jpeg" alt="Matt DeShon">
+    const Certifications = () => (
+      <section id="Certifications" className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-gray-900 text-center sm:text-4xl">Certifications</h2>
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {[
+              { title: "Cisco", desc: "CCNA", link: null },
+              { title: "Cisco", desc: "AI Solutions on Cisco Infrastructure Essentials (DCAIE)", link: null },
+              { title: "Axelos", desc: "ITIL v4", link: null },
+              { title: "Microsoft", desc: "AI Fundamentals", link: null },
+              { title: "IBM", desc: "Artificial Intelligence Fundamentals", link: null },
+              { title: "FCC", desc: "Amateur Radio General Class", link: null },
+              { title: "NOCTI", desc: "Electronics", link: null },
+              { title: "BCTC", desc: "Robotics Automation Technician", link: null },
+              { title: "BCTC", desc: "Automation Technician", link: null },
+              { title: "BCTC", desc: "Electronics Technician", link: null },
+              { title: "BCTC", desc: "Industrial Electronics Technician", link: null },
+            ].map((project, index) => (
+              <div key={index} className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105">
+                <h3 className="text-xl font-semibold text-gray-900">{project.title}</h3>
+                <p className="mt-2 text-gray-600">{project.desc}</p>
+                {project.link && (
+                  <a href={project.link} className="mt-4 inline-block text-blue-600 hover:underline">View Details</a>
+                )}
               </div>
-              <div class="header-titles">
-                <h2>Matt DeShon</h2>
-                <h4>Versatile Tech Professional</h4>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+
+    const Portfolio = () => (
+      <section id="portfolio" className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-gray-900 text-center sm:text-4xl">Portfolio</h2>
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {[
+              { title: "Project 1", desc: "Data Center Failover Automation", link: "https://www.mattDeShon.com/blog/bgp" },
+              { title: "Project 2", desc: "Streamlining Website Updates with Cloudflare Pages and GitHub", link: "https://mattDeShon.com/blog/blog3" },
+              { title: "Project 3", desc: "Navigating the High Seas with Data Science", link: "https://mattDeShon.com/blog/blog1" },
+              { title: "Project 4", desc: "Troubleshooting Voice Quality Issues", link: "https://www.mattdeshon.com/blog/troubleshooting-voip-lldp" },
+              { title: "Project 5", desc: "Capturing an SSTV Image from the ISS", link: "https://mattdeshon.com/blog/blog4-iss" },
+            ].map((project, index) => (
+              <div key={index} className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105">
+                <h3 className="text-xl font-semibold text-gray-900">{project.title}</h3>
+                <p className="mt-2 text-gray-600">{project.desc}</p>
+                <a href={project.link} className="mt-4 inline-block text-blue-600 hover:underline">View Project</a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+
+    const Contact = () => {
+      const [formData, setFormData] = React.useState({ name: '', email: '', message: '' });
+      const [status, setStatus] = React.useState('');
+
+      const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+      };
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        setStatus('Sending...');
+        console.log('Submitting form:', formData); // Debug
+        try {
+          const response = await fetch('https://formspree.io/f/xrbqelab', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: JSON.stringify(formData),
+          });
+          if (response.ok) {
+            setStatus('Message sent successfully! Check your email.');
+            setFormData({ name: '', email: '', message: '' });
+            console.log('Form submission successful'); // Debug
+          } else {
+            throw new Error('Form submission failed');
+          }
+        } catch (error) {
+          setStatus('Failed to send message. Please try again.');
+          console.error('Form submission error:', error); // Debug
+        }
+      };
+
+      return (
+        <section id="contact" className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold text-gray-900 text-center sm:text-4xl">Get in Touch</h2>
+            <form onSubmit={handleSubmit} className="mt-10 max-w-lg mx-auto">
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Your Name"
+                  required
+                  className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  aria-label="Your Name"
+                />
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Your Email"
+                  required
+                  className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  aria-label="Your Email"
+                />
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  placeholder="Your Message"
+                  required
+                  className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  rows="4"
+                  aria-label="Your Message"
+                ></textarea>
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
+                >
+                  Send Message
+                </button>
+                {status && <p className="text-center text-gray-600">{status}</p>}
+              </div>
+            </form>
+            <div className="mt-6 text-center">
+              <p className="text-gray-600">Or connect with me on:</p>
+              <div className="flex justify-center space-x-4 mt-2">
+                <a href="https://www.linkedin.com/in/mattDeShon/" target="_blank" aria-label="LinkedIn">
+                  <i className="fab fa-linkedin text-2xl text-blue-600 hover:scale-110 transition-transform"></i>
+                </a>
+                <a href="https://github.com/mDeShon82" target="_blank" aria-label="GitHub">
+                  <i className="fab fa-github text-2xl text-blue-600 hover:scale-110 transition-transform"></i>
+                </a>
               </div>
             </div>
-
-            <ul class="main-menu">
-              <li class="active">
-                <a href="#home" class="nav-anim">
-                  <span class="menu-icon lnr lnr-home"></span>
-                  <span class="link-text">Home</span>
-                </a>
-              </li>
-              <li>
-                <a href="#about-me" class="nav-anim">
-                  <span class="menu-icon lnr lnr-user"></span>
-                  <span class="link-text">About Me</span>
-                </a>
-              </li>
-              <li>
-                <a href="#resume" class="nav-anim">
-                  <span class="menu-icon lnr lnr-graduation-hat"></span>
-                  <span class="link-text">Resume</span>
-                </a>
-              </li>
-              <li>
-              <li>
-                <a href="#blog" class="nav-anim">
-                  <span class="menu-icon lnr lnr-book"></span>
-                  <span class="link-text">Blog</span>
-                </a>
-              </li>
-              <li>
-                <a href="#contact" class="nav-anim">
-                  <span class="menu-icon lnr lnr-envelope"></span>
-                  <span class="link-text">Contact</span>
-                </a>
-              </li>
-            </ul>
-
-            <div class="social-links">
-              <ul>
-                  <li><a href="https://www.linkedin.com/in/mattdeshon/"><img src="/img/linkedin-icn.png" alt="Linkedin"></a></li>
-                  <li><a href="https://www.credly.com/users/matt-deshon"><img src="/img/credley-icn.png" alt="Credly"></a></li>
-                  <li><a href="https://github.com/mdeshon82"><img src="/img/github-icn.png" alt="GitHub"></a></li>
-                  <li><a href="https://mattdeshon.com/privacy-policy"><img src="/img/privacy-policy-icn.png" alt="Privacy Policy"></a></li>
-              </ul>
-
-            </div>
-
-            <div class="header-buttons">
-              <a href="#" target="_blank" class="btn btn-primary">Download CV</a>
-            </div>
-
-            <div class="copyrights">© 2024 All rights reserved.</div>
-          </header>
-
-          <!-- Mobile Navigation -->
-          <div class="menu-toggle">
-            <span></span>
-            <span></span>
-            <span></span>
           </div>
-          <!-- End Mobile Navigation -->
-
-          <!-- Arrows Nav -->
-          <div class="lmpixels-arrows-nav">
-            <div class="lmpixels-arrow-right"><i class="lnr lnr-chevron-right"></i></div>
-            <div class="lmpixels-arrow-left"><i class="lnr lnr-chevron-left"></i></div>
-          </div>
-          <!-- End Arrows Nav -->
-
-          <div class="content-area">
-            <div class="animated-sections">
-              <!-- Home Subpage -->
-              <section data-id="home" class="animated-section start-page">
-                <div class="section-content vcentered">
-
-                    <div class="row">
-                      <div class="col-sm-12 col-md-12 col-lg-12">
-                        <div class="title-block">
-                          <h2>Matt DeShon</h2>
-                          <div class="owl-carousel text-rotation">                                    
-                            <div class="item">
-                              <div class="sp-subtitle">Network Engineering and Design</div>
-                            </div>
-                            <div class="item">
-                              <div class="sp-subtitle">Wireless/RF Engineering</div>
-                            </div>
-                             <div class="item">
-                              <div class="sp-subtitle">Automation</div>
-                            </div>
-                            <div class="item">
-                              <div class="sp-subtitle">Electronics and Robotics</div>
-                            </div>
-                            <div class="item">
-                              <div class="sp-subtitle">Artificial Intelligence</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                </div>
-              </section>
-              <!-- End of Home Subpage -->
-
-              <!-- About Me Subpage -->
-              <section data-id="about-me" class="animated-section">
-                <div class="section-content">
-                  <div class="page-title">
-                    <h2>About <span>Me</span></h2>
-                  </div>
-
-                  <!-- Personal Information -->
-                  <div class="row">
-                    <div class="col-xs-12 col-sm-7">
-                      <p>A detail-driven engineer with a track record of leadership and achieving project goals; skilled problem solver with the ability to identify and troubleshoot errors in early stages to avoid time, resource, and cost expenditures. My goal is to deliver high-quality results that exceed expectations.</p>
-                    </div>
-
-                    <div class="col-xs-12 col-sm-5">
-                      <div class="info-list">
-                        <ul>
-                          <li>
-                            <span class="title">e-mail</span>
-                            <span class="value">contact@mattdeshon.com</span>
-                          </li>
-
-                          <li>
-                            <span class="title">Phone</span>
-                            <span class="value">(502) 219-3082</span>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- End of Personal Information -->
-
-                  <div class="white-space-50"></div>
-
-                  <!-- Services -->
-                  <div class="row">
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="block-title">
-                        <h3>What <span>I Do</span></h3>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-xs-12 col-sm-6">
-                      <div class="col-inner">
-                        <div class="info-list-w-icon">
-                          <div class="info-block-w-icon">
-                            <div class="ci-icon">
-                              <i class="lnr lnr-store"></i>
-                            </div>
-                            <div class="ci-text">
-                              <h4>Network Engineering</h4>
-                              <p>I bring extensive experience in designing, securing, and optimizing networks through a combination of traditional and cutting-edge technologies. My expertise includes implementing advanced solutions like Cisco Identity Services Engine (ISE) for dynamic policy enforcement, micro-segmentation, and software-defined access (SDA) to create secure, scalable network environments. Additionally, I am skilled in configuring and managing foundational systems, such as Active Directory, DHCP and DNS, and optimizing reverse proxy setups like Nginx. By combining robust security practices with efficient network management, I deliver seamless connectivity, enhanced performance, and resilient protection for critical organizational assets.</p>
-                            </div>
-                          </div>
-                          <div class="info-block-w-icon">
-                            <div class="ci-icon">
-                              <i class="lnr lnr-laptop-phone"></i>
-                            </div><div class="ci-text">
-                              <h4>RF/Wireless Engineering</h4>
-                              <p>With a strong background in RF and wireless engineering, I specialize in designing and optimizing wireless communication systems for a wide range of applications. My expertise includes frequency planning, antenna design, signal propagation analysis, and troubleshooting RF circuits. I have hands-on experience working with various wireless technologies such as VHF, GMRS, and 2m ham radio systems, ensuring efficient and reliable performance in both short- and long-range communication. I am adept at using advanced tools like spectrum analyzers to diagnose issues and enhance signal quality, making me a valuable asset for projects requiring precise, high-performance wireless solutions.</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-xs-12 col-sm-6">
-                      <div class="col-inner">
-                        <div class="info-list-w-icon">
-                          <div class="info-block-w-icon">
-                            <div class="ci-icon">
-                              <i class="lnr lnr-pencil"></i>
-                            </div>
-                            <div class="ci-text">
-                              <h4>Electronics</h4>
-                              <p>With a deep understanding of electronics, I excel in designing, building, and troubleshooting complex systems. My expertise spans circuit design, microcontrollers, and integrating hardware with software to develop innovative solutions. Whether working with cutting-edge technologies like IoT devices or optimizing traditional electronic systems, I bring precision and creativity to every project. I thrive on solving challenges and delivering reliable, high-performance electronic systems tailored to meet specific needs.</p>
-                            </div>
-                          </div>
-                          <div class="info-block-w-icon">
-                            <div class="ci-icon">
-                              <i class="lnr lnr-flag"></i>
-                            </div><div class="ci-text">
-                              <h4>Automation</h4>
-                              <p>I have extensive experience in robotics and automation, with a strong focus on leveraging Ansible for efficient network, server, and control system automation. My expertise includes working with PLCs to design, implement, and optimize automated control systems for industrial applications. Additionally, I have a proven track record in automating network configurations and server management to enhance system efficiency and reliability. By combining Ansible’s powerful automation capabilities with PLC integration, I streamline operations, reduce manual intervention, and create scalable, high-performance solutions across both industrial and IT environments.</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- End of Services -->
-
-                
-                  <div class="white-space-30"></div>
-
-                  <!-- Clients -->
-          <!--   <div class="row">
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="block-title">
-                        <h3>Cilents</h3>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="clients owl-carousel">
-                        
-                        <div class="client-block">
-                          <a href="#" target="_blank" title="Logo">
-                            <img src="img/clients/client-1.png" alt="Logo">
-                          </a>
-                        </div>
-
-                        <div class="client-block">
-                          <a href="#" target="_blank" title="Logo">
-                            <img src="img/clients/client-2.png" alt="Logo">
-                          </a>
-                        </div>
-
-                        <div class="client-block">
-                          <a href="#" target="_blank" title="Logo">
-                            <img src="img/clients/client-3.png" alt="Logo">
-                          </a>
-                        </div>
-
-                        <div class="client-block">
-                          <a href="#" target="_blank" title="Logo">
-                            <img src="img/clients/client-4.png" alt="Logo">
-                          </a>
-                        </div>
-
-                        <div class="client-block">
-                          <a href="#" target="_blank" title="Logo">
-                            <img src="img/clients/client-5.png" alt="Logo">
-                          </a>
-                        </div>
-
-                        <div class="client-block">
-                          <a href="#" target="_blank" title="Logo">
-                            <img src="img/clients/client-6.png" alt="Logo">
-                          </a>
-                        </div>
-
-                        <div class="client-block">
-                          <a href="#" target="_blank" title="Logo">
-                            <img src="img/clients/client-7.png" alt="Logo">
-                          </a>
-                        </div>
-  
-                      </div>
-                    </div>
-                  </div>
-                -->
-                  <!-- End of Clients -->
-
-                  <div class="white-space-50"></div>
-
-                  <!-- Pricing -->
-                <!--  <div class="row">
-                    <div class="col-xs-12 col-sm-12">
-
-                      <div class="block-title">
-                        <h3>Pricing</h3>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class=" col-xs-12 col-sm-12 ">
-                      <div class="fw-pricing clearfix row">
-                        
-                        <div class="fw-package-wrap col-md-6 ">
-                          <div class="fw-package">
-                            <div class="fw-heading-row">
-                              <span>Silver</span>
-                            </div>
-                            
-                            <div class="fw-pricing-row">
-                              <span>$64</span>
-                              <small>per month</small>
-                            </div>
-                            
-                            <div class="fw-button-row">
-                              <a href="#" target="_self" class="btn btn-secondary">Free Trial</a>
-                            </div>
-
-                            <div class="fw-default-row">Lorem ipsum dolor</div>
-                            <div class="fw-default-row">Pellentesque scelerisque</div>
-                            <div class="fw-default-row">Morbi eu sagittis</div>
-                          </div>
-                        </div>
-     
-                        <div class="fw-package-wrap col-md-6 highlight-col ">
-                          <div class="fw-package">
-                            <div class="fw-heading-row">
-                              <span>Gold</span>
-                            </div>
-                            
-                            <div class="fw-pricing-row">
-                              <span>$128</span>
-                              <small>per month</small>
-                            </div>
-
-                            <div class="fw-button-row">
-                              <a href="#" target="_self" class="btn btn-primary">Free Trial</a>
-                            </div>
-                            
-                            <div class="fw-default-row">Lorem ipsum dolor</div>
-                            <div class="fw-default-row">Pellentesque scelerisque</div>
-                            <div class="fw-default-row">Morbi eu sagittis</div>
-                            <div class="fw-default-row">Donec non diam</div>
-                            <div class="fw-default-row"></div>
-                          </div>
-                        </div>
-
-                      </div>
-                    </div>
-                  </div> -->
-                  <!-- End of Pricing -->
-
-                  <div class="white-space-50"></div>
-
-                  <!-- Fun Facts -->
-                  <!-- <div class="row">
-                    <div class="col-xs-12 col-sm-12">
-
-                      <div class="block-title">
-                        <h3>Fun <span>Facts</span></h3>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-xs-12 col-sm-4">
-                      <div class="fun-fact gray-default">
-                        <i class="lnr lnr-heart"></i>
-                        <h4>Happy Clients</h4>
-                        <span class="fun-fact-block-value">578</span>
-                        <span class="fun-fact-block-text"></span>
-                      </div>
-                    </div>
-
-                    <div class="col-xs-12 col-sm-4">
-                      <div class="fun-fact gray-default">
-                        <i class="lnr lnr-clock"></i>
-                        <h4>Working Hours</h4>
-                        <span class="fun-fact-block-value">4,780</span>
-                        <span class="fun-fact-block-text"></span>
-                      </div>
-                    </div>
-
-                    <div class="col-xs-12 col-sm-4 ">
-                      <div class="fun-fact gray-default">
-                        <i class="lnr lnr-star"></i>
-                        <h4>Awards Won</h4>
-                        <span class="fun-fact-block-value">2</span>
-                        <span class="fun-fact-block-text"></span>
-                      </div>
-                    </div>
-                  </div> -->
-                  <!-- End of Fun Facts -->
-
-                </div>
-              </section>
-              <!-- End of About Me Subpage -->
-
-              <!-- Resume Subpage -->
-              <section data-id="resume" class="animated-section">
-                <div class="section-content">
-                  <div class="page-title">
-                    <h2>Resume</h2>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-xs-12 col-sm-7">
-
-                      <div class="block-title">
-                        <h3>Education</h3>
-                      </div>
-                      
-                      <div class="timeline timeline-second-style clearfix">
-                        <div class="timeline-item clearfix">
-                          <div class="left-part">
-                            <h5 class="item-period">2024</h5>
-                            <span class="item-company">Code:Kentucky</span>
-                          </div>
-                          <div class="divider"></div>
-                          <div class="right-part">
-                            <h4 class="item-title">Data Analytics</h4>
-                            <p>I developed the ability to analyze raw data to identify trends and address inquiries. Additionally, I have acquired essential skills in Python, R, and SQL, vital for advanced analytics. </p>
-                          </div>
-                        </div>
-
-                        <div class="timeline-item clearfix">
-                          <div class="left-part">
-                            <h5 class="item-period">2023</h5>
-                            <span class="item-company">Bluegrass Community Technical College</span>
-                          </div>
-                          <div class="divider"></div>
-                          <div class="right-part">
-                            <h4 class="item-title">AS Engineering and Electronics Technology</h4>
-                            <p>
-                              I acquired knowledge in conventional engineering principles, encompassing electronics, computer-aided design (CAD) software, 3D animation, computer programming, and design drafting.</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="white-space-50"></div>
-
-                      <div class="block-title">
-                        <h3>Experience</h3>
-                      </div>
-
-                      <div class="timeline timeline-second-style clearfix">
-                        <div class="timeline-item clearfix">
-                          <div class="left-part">
-                            <h5 class="item-period">2021 - Current</h5>
-                            <span class="item-company">Finance Industry</span>
-                          </div>
-                          <div class="divider"></div>
-                          <div class="right-part">
-                            <h4 class="item-title">Infrastructure Manager</h4>
-                            <p>
-                              Experienced IT professional with a proven track record in successfully migrating virtual machines to Azure, transitioning from on-premises Active Directory to Entra ID, and implementing robust security measures such as Cisco ISE. Skilled in automation using Ansible for streamlined processes and efficiency. Demonstrated expertise in establishing Azure Global Secure Access for enhanced data protection and system integrity.</p>
-                          </div>
-                        </div>
-
-                        <div class="timeline-item clearfix">
-                          <div class="left-part">
-                            <h5 class="item-period">2019 - 2021</h5>
-                            <span class="item-company">Technology Provider</span>
-                          </div>
-                          <div class="divider"></div>
-                          <div class="right-part">
-                            <h4 class="item-title">Senior Network Engineer</h4>
-                            <p>
-                              In my capacity, I efficiently managed Wide Area Network (WAN) and Campus Local Area Network (LAN), overseeing an extensive fiber optic network, and coordinating Cisco Wireless deployments across multiple sites. Additionally, I expertly implemented and maintained Cisco Identity Services Engine (ISE) and Cisco DNA Center, ensuring a seamless integration of advanced network security and management solutions.</p>
-                          </div>
-                        </div>
-                        </div>
-                        
-
-                    </div>
-
-                    <!-- Skills & Certificates -->
-                    <div class="col-xs-12 col-sm-5">
-                      <!-- Design Skills -->
-                      <div class="block-title">
-                        <h3>Engineering <span>Skills</span></h3>
-                      </div>
-
-                      <div class="skills-info skills-second-style">
-                        <!-- Skill 1 -->
-                        <div class="skill clearfix">
-                          <h4>Network Engineering and Design</h4>
-                          <div class="skill-value"></div>
-                        </div>
-                        <div class="skill-container skill-1">
-                          <div class="skill-percentage"></div>
-                        </div>
-                        <!-- End of Skill 1 -->
-                        
-                        <!-- Skill 2 -->
-                        <div class="skill clearfix">
-                          <h4>Electronics</h4>
-                          <div class="skill-value"></div>
-                        </div>
-                        <div class="skill-container skill-2">
-                          <div class="skill-percentage"></div>
-                        </div>
-                        <!-- End of Skill 2 -->
-                        
-                        <!-- Skill 3 -->
-                        <div class="skill clearfix">
-                          <h4>RF Engineering</h4>
-                          <div class="skill-value"></div>
-                        </div>
-                        <div class="skill-container skill-3">
-                          <div class="skill-percentage"></div>
-                        </div>
-                        <!-- End of Skill 3 -->
-                        
-                        <!-- Skill 4 -->
-                        <div class="skill clearfix">
-                          <h4>Wireless Engineering</h4>
-                          <div class="skill-value"></div>
-                        </div>
-                        <div class="skill-container skill-4">
-                          <div class="skill-percentage"></div>
-                        </div>
-                        <!-- End of Skill 4 -->
-
-                      </div>
-                      <!-- End of Design Skills -->
-
-                      <div class="white-space-10"></div>
-
-                      <!-- Coding Skills -->
-                      <div class="block-title">
-                        <h3>Automation <span>Skills</span></h3>
-                      </div>
-
-                      <div class="skills-info skills-second-style">
-                        <!-- Skill 5 -->
-                        <div class="skill clearfix">
-                          <h4>Robotics</h4>
-                          <div class="skill-value"></div>
-                        </div>
-                        <div class="skill-container skill-5">
-                          <div class="skill-percentage"></div>
-                        </div>
-                        <!-- End of Skill 5 -->
-
-                        <!-- Skill 6 -->
-                        <div class="skill clearfix">
-                          <h4>Python</h4>
-                          <div class="skill-value"></div>
-                        </div>
-                        <div class="skill-container skill-6">
-                          <div class="skill-percentage"></div>
-                        </div>
-                        <!-- End of Skill 6 -->
-                        
-                        <!-- Skill 7 -->
-                        <div class="skill clearfix">
-                          <h4>Ansible</h4>
-                          <div class="skill-value"></div>
-                        </div>
-                        <div class="skill-container skill-7">
-                          <div class="skill-percentage"></div>
-                        </div>
-                        <!-- End of Skill 7 -->
-                        
-                        <!-- Skill 8 -->
-                        <div class="skill clearfix">
-                          <h4>PLC/HMI</h4>
-                          <div class="skill-value"></div>
-                        </div>
-                        <div class="skill-container skill-8">
-                          <div class="skill-percentage"></div>
-                        </div>
-                        <!-- End of Skill 8 -->
-
-                        <!-- Skill 9 -->
-                        <div class="skill clearfix">
-                          <h4>C+</h4>
-                          <div class="skill-value"></div>
-                        </div>
-                        <div class="skill-container skill-9">
-                          <div class="skill-percentage"></div>
-                        </div>
-                        <!-- End of Skill 9 -->
-                      </div>
-                      <!-- End of Coding Skills -->
-
-                      <div class="white-space-10"></div>
-
-                      <!-- Knowledges -->
-                      <div class="block-title">
-                        <h3>Knowledge</h3>
-                      </div>
-
-                      <ul class="knowledges">
-                        <li>Enterprise and DataCenter Networking</li>
-                        <li>Cloud</li>
-                        <li>Wireless/RF Engineering</li>
-                        <li>Electronics</li>
-                        <li>Robotics</li>
-                        <li>Time Management</li>
-                        <li>Communication</li>
-                        <li>Problem-Solving</li>
-                        <li>Automation</li>
-                        <li>Flexibility</li>
-                        <li>Brown and Greenfield Migrations</li>
-                        
-                      </ul>
-                      <!-- End of Knowledges -->
-                    </div>
-                    <!-- End of Skills & Certificates -->
-                  </div>
-
-                  <div class="white-space-50"></div>
-
-                  <!-- Certificates -->
-                  <div class="row">
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="block-title">
-                        <h3>Certifications</h3>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="row">
-                    <!-- Certificate 1 -->
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="certificate-item clearfix">
-                        <div class="certi-logo">
-                          <img src="img/ccna_med.jpg" alt="logo">
-                        </div>
-                        
-                        <div class="certi-content">
-                          <div class="certi-title">
-                            <h4>CCNA</h4>
-                          </div>
-                          <div class="certi-id">
-                            <span>Credential ID: CSCO12766991</span>
-                          </div>
-                          <div class="certi-date">
-                            <span>June 2022</span>
-                          </div>
-                          <div class="certi-company">
-                            <span>Cisco</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End of Certificate 1 -->
-
-                    <!-- Certificate 2 -->
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="certificate-item clearfix">
-                        <div class="certi-logo">
-                          <img src="img/ms_ai.jpg" alt="logo" href="https://learn.microsoft.com/en-us/users/mdeshon82/credentials/5b5fdbaf86d7b2ff">
-                        </div>
-                        
-                        <div class="certi-content">
-                          <div class="certi-title">
-                            <h4>AI Fundamentals</h4>
-                          </div>
-                          <div class="certi-id">
-                            <span>Credential ID: 5B5FDBAF86D7B2FF</span>
-                          </div>
-                          <div class="certi-date">
-                            <span>Dec 2023</span>
-                          </div>
-                          <div class="certi-company">
-                            <span>Azure</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End of Certificate 2 -->
-
-                    <!-- Certificate 3 -->
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="certificate-item clearfix">
-                        <div class="certi-logo">
-                          <img src="img/itil.png" alt="logo" href="https://learn.microsoft.com/en-us/users/mdeshon82/credentials/5b5fdbaf86d7b2ff">
-                        </div>
-                        
-                        <div class="certi-content">
-                          <div class="certi-title">
-                            <h4>ITIL® v4 Foundations</h4>
-                          </div>
-                          <div class="certi-id">
-                            <span>Credential ID: GR671574514MD</span>
-                          </div>
-                          <div class="certi-date">
-                            <span>Oct 2023</span>
-                          </div>
-                          <div class="certi-company">
-                            <span>ITIL</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End of Certificate 3 -->
-
-
-                    <!-- Certificate 4 -->
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="certificate-item clearfix">
-                        <div class="certi-logo">
-                          <img src="img/ibm_data.png" alt="logo">
-                        </div>
-                        
-                        <div class="certi-content">
-                          <div class="certi-title">
-                            <h4>Data Fundamentals</h4>
-                          </div>
-                          <div class="certi-date">
-                            <span>May 2024</span>
-                          </div>
-                          <div class="certi-company">
-                            <span>IBM</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End of Certificate 4 -->
-                    
-                    <!-- Certificate 5 -->
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="certificate-item clearfix">
-                        <div class="certi-logo">
-                          <img src="img/ibmaifund.jpg" alt="logo">
-                        </div>
-                        
-                        <div class="certi-content">
-                          <div class="certi-title">
-                            <h4>Artificial Intelligence Fundamentals</h4>
-                          </div>
-                          <div class="certi-date">
-                            <span>July 2024</span>
-                          </div>
-                          <div class="certi-company">
-                            <span>IBM</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End of Certificate 5 -->
-
-                    <!-- Certificate 6 -->
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="certificate-item clearfix">
-                        <div class="certi-logo">
-                          <img src="img/fcc.png" alt="logo">
-                        </div>
-                        
-                        <div class="certi-content">
-                          <div class="certi-title">
-                            <h4>Ameture Radio General Class</h4>
-                          </div>
-                          <div class="IT">
-                            <span>KQ4YLS</span>
-                          <div class="certi-date">
-                            <span>November 2024</span>
-                          </div>
-                          <div class="certi-company">
-                            <span>FCC</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End of Certificate 6 -->
-                      
-                    <!-- Certificate 7 -->
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="certificate-item clearfix">
-                        <div class="certi-logo">
-                          <img src="img/bctc.jpeg" alt="logo">
-                        </div>
-                        
-                        <div class="certi-content">
-                          <div class="certi-title">
-                            <h4>Robotics Automation Technician</h4>
-                          </div>
-                          <div class="certi-id">
-                            <span></span>
-                          </div>
-                          <div class="certi-date">
-                            <span>Dec 2023</span>
-                          </div>
-                          <div class="certi-company">
-                            <span>Bluegrass Community and Technical College</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End of Certificate 7 -->        
-                      
-                    <!-- Certificate 8 -->
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="certificate-item clearfix">
-                        <div class="certi-logo">
-                          <img src="img/bctc.jpeg" alt="logo">
-                        </div>
-                        
-                        <div class="certi-content">
-                          <div class="certi-title">
-                            <h4>Electronics Technician</h4>
-                          </div>
-                          <div class="certi-date">
-                            <span>December 2023</span>
-                          </div>
-                          <div class="certi-company">
-                            <span>Bluegrass Community and Technical College</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End of Certificate 8 -->
-                      
-                    <!-- Certificate 9 -->
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="certificate-item clearfix">
-                        <div class="certi-logo">
-                          <img src="img/bctc.jpeg" alt="logo">
-                        </div>
-                        
-                        <div class="certi-content">
-                          <div class="certi-title">
-                            <h4>Automation Technician</h4>
-                          </div>
-                          <div class="certi-date">
-                            <span>December 2023</span>
-                          </div>
-                          <div class="certi-company">
-                            <span>Bluegrass Community and Technical College</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End of Certificate 9 -->
-                      
-                    <!-- Certificate 10 -->
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="certificate-item clearfix">
-                        <div class="certi-logo">
-                          <img src="img/bctc.jpeg" alt="logo">
-                        </div>
-                        
-                        <div class="certi-content">
-                          <div class="certi-title">
-                            <h4>Industrial Electrical Maintenance Mechanic</h4>
-                          </div>
-                          <div class="certi-date">
-                            <span>December 2023</span>
-                          </div>
-                          <div class="certi-company">
-                            <span>Bluegrass Community and Technical College</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End of Certificate 10-->
-
-                    <!-- Certificate 11 -->
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="certificate-item clearfix">
-                        <div class="certi-logo">
-                          <img src="img/bctc.jpeg" alt="logo">
-                        </div>
-                        
-                        <div class="certi-content">
-                          <div class="certi-title">
-                            <h4>Industrial Electronics Tech Level 2</h4>
-                          </div>
-                          <div class="certi-date">
-                            <span>December 2023</span>
-                          </div>
-                          <div class="certi-company">
-                            <span>Bluegrass Community and Technical College</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End of Certificate 11 -->
-
-                      <!-- Certificate 12 -->
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="certificate-item clearfix">
-                        <div class="certi-logo">
-                          <img src="img/bctc.jpeg" alt="logo">
-                        </div>
-                        
-                        <div class="certi-content">
-                          <div class="certi-title">
-                            <h4>Industrial Automation and Robotics Technician Level 2</h4>
-                          </div>
-                          <div class="certi-date">
-                            <span>December 2023</span>
-                          </div>
-                          <div class="certi-company">
-                            <span>Bluegrass Community and Technical College</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End of Certificate 12 -->
-
-                      <!-- Certificate 13 -->
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="certificate-item clearfix">
-                        <div class="certi-logo">
-                          <img src="img/nocti.jpeg" alt="logo">
-                        </div>
-                        
-                        <div class="certi-content">
-                          <div class="certi-title">
-                            <h4>Electronics</h4>
-                          </div>
-                          <div class="certi-date">
-                            <span>December 2023</span>
-                          </div>
-                          <div class="certi-company">
-                            <span>NOCTI</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End of Certificate 13 -->
-
-                  </div>
-                  <!-- End of Certificates -->
-                </div>
-              </section>
-              <!-- End of Resume Subpage -->
-
-              <!-- Portfolio Subpage -->
-              <!-- End of Portfolio Subpage -->
-         
-
-              <!-- Blog Subpage -->
-              <section data-id="blog" class="animated-section">
-                <div class="section-content">
-                  <div class="page-title">
-                    <h2>Blog</h2>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-xs-12 col-sm-12">
-                      <div class="blog-masonry two-columns clearfix">
-                        
-                        <!-- Blog Post 1 -->
-                        
-                        <div class="item post-1">
-                          <div class="blog-card">
-                            <div class="media-block">
-                              <div class="category">
-                                <a href="#" title="View all posts in Design">Design</a>
-                              </div>
-                              <a href="blog/blog1.html">
-                                <img src="img/oceannav.jpg" class="size-blog-masonry-image-two-c" alt="Navigating the High Seas with Data Science" title="" />
-                                <div class="mask"></div>
-                              </a>
-                            </div>
-                            <div class="post-info">
-                              <div class="post-date">July 2024</div>
-                              <a href="blog/blog1.html">
-                                <h4 class="blog-item-title">Navigating the High Seas with Data Science</h4>
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <!-- End of Blog Post 1 -->
-
-                        <!-- Blog Post 2 -->
-                        
-                        <div class="item post-2">
-                          <div class="blog-card">
-                            <div class="media-block">
-                              <div class="category">
-                                <a href="#" title="View all posts in Networking">Networking</a>
-                              </div>
-                              <a href="blog/bgp.html">
-                                <img src="img/pic2.jpg" class="size-blog-masonry-image-two-c" alt="Implementing BGP for Automated Failover in a Multi-Data Center Design" title="" />
-                                <div class="mask"></div>
-                              </a>
-                            </div>
-                            <div class="post-info">
-                              <div class="post-date">Nov 2024</div>
-                              <a href="blog/bgp.html">
-                                <h4 class="blog-item-title">Implementing BGP for Automated Failover in a Multi-Data Center Design</h4>
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <!-- End of Blog Post 2 -->
-
-                        <!-- Blog Post 3 -->
-                        
-                        <div class="item post-3">
-                          <div class="blog-card">
-                            <div class="media-block">
-                              <div class="category">
-                                <a href="#" title="View all posts in Design">Design</a>
-                              </div>
-                              <a href="blog/blog3.html">
-                                <img src="img/web3.avif" class="size-blog-masonry-image-two-c" alt="Designing the Perfect Feature Comparison Table" title="" />
-                                <div class="mask"></div>
-                              </a>
-                            </div>
-                            <div class="post-info">
-                              <div class="post-date">Nov 2024</div>
-                              <a href="blog/blog3.html">
-                                <h4 class="blog-item-title">Streamlining Website Updates with Cloudflare Pages and GitHub</h4>
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <!-- End of Blog Post 3 -->
-
-                        <!-- Blog Post 4 -->
-                        
-                        <div class="item post-4">
-                          <div class="blog-card">
-                            <div class="media-block">
-                              <div class="category">
-                                <a href="#" title="Space and RF">Space and RF</a>
-                              </div>
-                              <a href="/blog/blog4-iss.html">
-                                <img src="/img/space-station.jpg" class="size-blog-masonry-image-two-c" alt="Capturing an SSTV Image from the ISS in My Backyard" title="" />
-                                <div class="mask"></div>
-                              </a>
-                            </div>
-                            <div class="post-info">
-                              <div class="post-date">Oct 2024</div>
-                              <a href="/img/space-station.jpg">
-                                <h4 class="blog-item-title">Capturing an SSTV Image from the ISS in My Backyard</h4>
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                       <!-- End of Blog Post 4 -->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-
-              </section>
-              <!-- End of Blog Subpage -->
-
-              <!-- Contact Subpage -->
-              <section data-id="contact" class="animated-section">
-                <div class="section-content">
-                  <div class="page-title">
-                    <h2>Contact</h2>
-                  </div>
-
-                  <div class="row">
-                    <!-- Contact Info -->
-                    <div class="col-xs-12 col-sm-4">
-                      <div class="lm-info-block gray-default">
-                        <i class="lnr lnr-map-marker"></i>
-                        <h4>Lexington, KY</h4>
-                        <span class="lm-info-block-value"></span>
-                        <span class="lm-info-block-text"></span>
-                      </div>
-
-                      <div class="lm-info-block gray-default">
-                        <i class="lnr lnr-phone-handset"></i>
-                        <h4>(502) 219-3082</h4>
-                        <span class="lm-info-block-value"></span>
-                        <span class="lm-info-block-text"></span>
-                      </div>
-
-                      <div class="lm-info-block gray-default">
-                        <i class="lnr lnr-envelope"></i>
-                        <h4>contact@mattdeshon.com</h4>
-                        <span class="lm-info-block-value"></span>
-                        <span class="lm-info-block-text"></span>
-                      </div>
-
-                      <div class="lm-info-block gray-default">
-                        <i class="lnr lnr-checkmark-circle"></i>
-                        <h4>Freelance Available</h4>
-                        <span class="lm-info-block-value"></span>
-                        <span class="lm-info-block-text"></span>
-                      </div>
-
-
-                    </div>
-                    <!-- End of Contact Info -->
-
-                    <!-- Contact Form -->
-                    <div class="col-xs-12 col-sm-8">
-                      <div id="map" class="map"></div>
-                      <div class="block-title">
-                        <h3>How Can I <span>Help You?</span></h3>
-                      </div>
-
-                      <form id="contact_form" class="contact-form" action="contact_form/contact_form.php" method="post">
-
-                        <div class="messages"></div>
-
-                        <div class="controls two-columns">
-                          <div class="fields clearfix">
-                            <div class="left-column">
-                              <div class="form-group form-group-with-icon">
-                                <input id="form_name" type="text" name="name" class="form-control" placeholder="" required="required" data-error="Name is required.">
-                                <label>Full Name</label>
-                                <div class="form-control-border"></div>
-                                <div class="help-block with-errors"></div>
-                              </div>
-
-                              <div class="form-group form-group-with-icon">
-                                <input id="form_email" type="email" name="email" class="form-control" placeholder="" required="required" data-error="Valid email is required.">
-                                <label>Email Address</label>
-                                <div class="form-control-border"></div>
-                                <div class="help-block with-errors"></div>
-                              </div>
-
-                              <div class="form-group form-group-with-icon">
-                                <input id="form_subject" type="text" name="subject" class="form-control" placeholder="" required="required" data-error="Subject is required.">
-                                <label>Subject</label>
-                                <div class="form-control-border"></div>
-                                <div class="help-block with-errors"></div>
-                              </div>
-                            </div>
-                            <div class="right-column">
-                              <div class="form-group form-group-with-icon">
-                                <textarea id="form_message" name="message" class="form-control" placeholder="" rows="7" required="required" data-error="Please, leave me a message."></textarea>
-                                <label>Message</label>
-                                <div class="form-control-border"></div>
-                                <div class="help-block with-errors"></div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="g-recaptcha" data-sitekey="6LdqmCAUAAAAAMMNEZvn6g4W5e0or2sZmAVpxVqI"></div>
-      
-                          <input type="submit" class="button btn-send" value="Send message">
-                        </div>
-                      </form>
-                    </div>
-                    <!-- End of Contact Form -->
-                  </div>
-
-                </div>
-              </section>
-              <!-- End of Contact Subpage -->
-            </div>
-          </div>
-
-      </div>
-    </div>
-
-    <script src="js/jquery.min.js"></script>
-    <script src="js/modernizr.custom.js"></script>
-    <script src="js/animating.js"></script>
-
-    <script src="js/imagesloaded.pkgd.min.js"></script>
-    <script src='https://www.google.com/recaptcha/api.js'></script>
-
-    <script src='js/perfect-scrollbar.min.js'></script>
-    <script src='js/jquery.shuffle.min.js'></script>
-    <script src='js/masonry.pkgd.min.js'></script>
-    <script src='js/owl.carousel.min.js'></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-
-   
-    <script src="js/jquery.googlemap.js"></script>
-    <script src="js/validator.js"></script>
-    <script src="js/main.js"></script>
-  </body>
+        </section>
+      );
+    };
+
+    const Footer = () => (
+      <footer className="bg-gray-800 py-6 text-white text-center">
+        <p>© 2025 Matt DeShon. All rights reserved.</p>
+      </footer>
+    );
+
+    const App = () => (
+      <ErrorBoundary>
+        <main>
+          <Nav />
+          <Hero />
+          <About />
+          <Certifications />
+          <Portfolio />
+          <Contact />
+          <Footer />
+        </main>
+      </ErrorBoundary>
+    );
+
+    // Render with error handling
+    try {
+      console.log('Attempting to render React app'); // Debug
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+      document.getElementById('fallback').style.display = 'none';
+      console.log('Render successful'); // Debug
+    } catch (error) {
+      console.error('Root render error:', error);
+      document.getElementById('fallback').style.display = 'block';
+    }
+  </script>
+</body>
 </html>
