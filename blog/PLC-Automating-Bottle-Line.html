@@ -78,7 +78,7 @@
     </div>
     <div class="container">
         <h1>Automating a Honey Bottling Line: A PLC and Vision System Solution</h1>
-        <img src="/img/voip.png" alt="voip">
+        <img src="/img/honey_bottle.png" alt="plc">
         
        <p>In a recent project, I had the opportunity to design, install, and program a Programmable Logic Controller (PLC) system, along with a vision system, for a friend's honey bottling business to boost production efficiency and ensure safety. This post outlines the process using the STAR (Situation, Task, Action, Result) framework, including technical details like ladder diagrams and structured text for the PLC programming, as well as the vision system setup.</p>
 
@@ -121,18 +121,7 @@
             <h5>Ladder Diagram</h5>
             <p>The ladder logic controlled the conveyor and filling process based on sensor inputs.</p>
             <pre>
-(* Ladder Logic Example for Bottle Filling *)
-(* Rung 0: Start Conveyor if Bottle Detected *)
-Bottle_Sensor   Conveyor_Motor
-|----] [---------( )----|
-
-(* Rung 1: Activate Filling Valve if Bottle at Fill Station *)
-Bottle_At_Fill_Station   Fill_Valve
-|----] [-----------------( )----|
-
-(* Rung 2: Stop Conveyor if Vision System Detects Hand *)
-Hand_Detected   Conveyor_Motor
-|----] [---------|/|------( )----|
+            <img src="/img/ladr_plc.png" alt="plc2">
             </pre>
 
             <h5>Structured Text</h5>
