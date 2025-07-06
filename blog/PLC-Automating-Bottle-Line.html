@@ -1,1 +1,195 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QR9L31V1TZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-QR9L31V1TZ');
+</script>
+    <meta name="author" content="Matt Deshon">
+    <meta name="description" content="PLC Design and Programming" />
+    <meta name="keywords" content="cisco, it, computer, network, github, plc, Allen-Bradley, pipline, automation, honey, honey bee, bottling line, robotics, blog, portfolio, electronics, engineering, repair, voice, voip, technology, managed, service, security" />
+    <link rel="shortcut icon" href="/img/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+    <link rel="icon" type="img/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="img/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automating a Honey Bottling Line: A PLC and Vision System Solution</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Poppins', Helvetica, sans-serif;
+            background-color: #0ba3765;
+            background: -webkit-gradient(linear, left top, left bottom, from(#0b7080), to(#0ba376));
+            background: linear-gradient(#0b7080, #0ba376);
+            color: #d5d5d5;
+            margin: 0;
+            padding: 0;
+        }
+        .menu-bar {
+            background-color: #0ba3765;
+            padding: 10px;
+            text-align: center;
+        }
+        .menu-bar a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #444;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            color: #fff;
+        }
+        p {
+            line-height: 1.6;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background-color: #ffeb3b;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-bar">
+        <a href="https://mattdeshon.com/#home">Return to Main Page</a>
+    </div>
+    <div class="container">
+        <h1>Automating a Honey Bottling Line: A PLC and Vision System Solution</h1>
+        <img src="/img/voip.png" alt="voip">
+        
+       <p>In a recent project, I had the opportunity to design, install, and program a Programmable Logic Controller (PLC) system, along with a vision system, for a friend's honey bottling business to boost production efficiency and ensure safety. This post outlines the process using the STAR (Situation, Task, Action, Result) framework, including technical details like ladder diagrams and structured text for the PLC programming, as well as the vision system setup.</p>
+
+            <h3>Situation</h3>
+            <p>My friend's honey business was struggling with a manual bottling process that was slow, labor-intensive, and prone to errors. The operation relied heavily on human labor, which led to inconsistent bottle fill levels and occasional safety concerns due to manual handling near moving equipment. With growing demand, they needed a solution to increase output, ensure consistent quality, and improve worker safety.</p>
+
+            <h3>Task</h3>
+            <p>The goal was to design and implement an automated bottling system to:</p>
+            <ul>
+                <li>Increase bottling output by at least 50%.</li>
+                <li>Ensure consistent bottle fill levels using a vision system.</li>
+                <li>Enhance safety by minimizing human interaction with moving parts.</li>
+                <li>Program a PLC to control the bottling line and integrate it with a vision system for quality assurance.</li>
+            </ul>
+
+            <h3>Action</h3>
+            <h4>1. System Design</h4>
+            <p>I began by assessing the existing bottling setup and identifying bottlenecks. The manual process involved filling, capping, and labeling bottles, with workers manually positioning bottles and monitoring fill levels. I designed a system with the following components:</p>
+            <ul>
+                <li>A conveyor system to move bottles through filling, capping, and labeling stations.</li>
+                <li>A PLC (Allen-Bradley CompactLogix) to control the conveyor, filling valves, and capping mechanism.</li>
+                <li>A vision system (Cognex In-Sight) to verify fill levels and detect human hands near the equipment for safety.</li>
+                <li>Sensors (proximity and photoelectric) to detect bottle positions and trigger actions.</li>
+            </ul>
+            <p>The system was designed to automate bottle positioning, filling, and capping, with the vision system ensuring quality and safety.</p>
+
+            <h4>2. Installation and Wiring</h4>
+            <p>I installed the conveyor system and mounted the PLC in a control cabinet. The wiring process included:</p>
+            <ul>
+                <li>Connecting proximity sensors to detect bottle presence at each station.</li>
+                <li>Wiring solenoid valves for precise honey dispensing.</li>
+                <li>Integrating the vision system with the PLC via Ethernet/IP for real-time communication.</li>
+                <li>Installing an emergency stop circuit to halt operations if the vision system detected a hand near the conveyor.</li>
+            </ul>
+            <p>Power distribution was managed with a 24V DC supply for sensors and a 120V AC supply for the conveyor motor and solenoids. All wiring followed NEC standards, with proper grounding and cable management to ensure reliability.</p>
+
+            <h4>3. PLC Programming</h4>
+            <p>The PLC was programmed using both ladder logic and structured text in Studio 5000 to control the bottling line. Below are simplified examples of the code.</p>
+
+            <h5>Ladder Diagram</h5>
+            <p>The ladder logic controlled the conveyor and filling process based on sensor inputs.</p>
+            <pre>
+(* Ladder Logic Example for Bottle Filling *)
+(* Rung 0: Start Conveyor if Bottle Detected *)
+Bottle_Sensor   Conveyor_Motor
+|----] [---------( )----|
+
+(* Rung 1: Activate Filling Valve if Bottle at Fill Station *)
+Bottle_At_Fill_Station   Fill_Valve
+|----] [-----------------( )----|
+
+(* Rung 2: Stop Conveyor if Vision System Detects Hand *)
+Hand_Detected   Conveyor_Motor
+|----] [---------|/|------( )----|
+            </pre>
+
+            <h5>Structured Text</h5>
+            <p>Structured text was used for more complex logic, such as timing the fill process and handling vision system feedback.</p>
+            <pre>
+(* Structured Text Example for Fill Control *)
+IF Bottle_At_Fill_Station AND NOT Hand_Detected THEN
+    Fill_Valve := TRUE;
+    Fill_Timer(IN := TRUE, PT := T#3s);
+    IF Fill_Timer.Q THEN
+        Fill_Valve := FALSE;
+        Fill_Timer(IN := FALSE);
+    END_IF;
+ELSE
+    Fill_Valve := FALSE;
+END_IF;
+
+(* Vision System Feedback *)
+IF Vision_Fill_OK THEN
+    Move_Bottle := TRUE;
+ELSE
+    Reject_Bottle := TRUE;
+END_IF;
+            </pre>
+
+            <h4>4. Vision System Setup</h4>
+            <p>The Cognex In-Sight vision system was configured to:</p>
+            <ul>
+                <li>Inspect fill levels by analyzing bottle images against a reference template.</li>
+                <li>Detect human hands using pattern recognition to identify unexpected shapes near the conveyor.</li>
+            </ul>
+            <p>The vision system was trained with sample images of correctly filled bottles and calibrated to detect deviations. It communicated with the PLC via Ethernet/IP, sending signals to stop the conveyor if a hand was detected or to reject under/overfilled bottles.</p>
+
+            <h4>5. Testing and Commissioning</h4>
+            <p>After installation, I conducted thorough testing:</p>
+            <ul>
+                <li>Verified sensor accuracy and conveyor alignment.</li>
+                <li>Tested the vision system with various bottle fill levels and simulated hand intrusions.</li>
+                <li>Debugged the PLC program to ensure smooth operation and proper error handling.</li>
+                <li>Trained the staff on system operation and basic troubleshooting.</li>
+            </ul>
+
+            <h3>Result</h3>
+            <p>The automated system delivered significant improvements:</p>
+            <ul>
+                <li><strong>Increased Output</strong>: Bottling output increased by 60%, exceeding the target of 50%.</li>
+                <li><strong>Quality Assurance</strong>: The vision system ensured 98% of bottles met fill level standards, reducing waste.</li>
+                <li><strong>Enhanced Safety</strong>: Hand detection eliminated manual handling risks, with zero safety incidents reported post-implementation.</li>
+                <li><strong>Operational Efficiency</strong>: The PLC-controlled process reduced labor costs by 30% and minimized downtime.</li>
+            </ul>
+            <p>The project was a success, allowing my friend's business to meet growing demand while maintaining quality and safety. The combination of PLC programming and vision system integration proved to be a robust solution for automating the honey bottling process.</p>
+
+            <h3>Conclusion</h3>
+            <p>This project showcased the power of automation in small-scale industries. By leveraging PLC programming, vision systems, and careful system design, I was able to transform a manual process into an efficient, safe, and scalable operation. If you're considering automation for your business, feel free to reach out for insights or guidance!</p>
+        </article>
+</body>
+    <footer style="text-align: center;">
+    <p>&copy; 2025 Matt DeShon. All rights reserved.</p>
+  </footer>
+</html>
