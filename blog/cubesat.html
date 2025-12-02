@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Building a CubeSat from Scratch Using Amazon Parts – Matt Deshon</title>
-    <meta name="description" content="A DIY guide to building a deployable 1U CubeSat almost entirely from off-the-shelf Amazon parts – including my full project plan and lessons from industrial automation.">
+    <title>Building a Real CubeSat from Amazon Parts – Yes, You Can Actually Launch It</title>
+    <meta name="description" content="A no-BS guide to building a deployable 1U CubeSat almost entirely from Amazon parts and yeeting it to orbit on a rideshare for under $2,000.">
 
-    <!-- Google Fonts (same as your site) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
@@ -18,88 +17,21 @@
             --accent: #2563eb;
             --accent-hover: #1d4ed8;
         }
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.7;
-        }
-        .container {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
-        header {
-            text-align: center;
-            padding: 4rem 0 2rem;
-        }
-        h1 {
-            font-size: 2.5rem;
-            margin: 0 0 0.5rem;
-            font-weight: 700;
-        }
-        .post-meta {
-            color: var(--gray);
-            font-size: 0.95rem;
-        }
-        .post-meta a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-        .post-meta a:hover {
-            text-decoration: underline;
-        }
-        article {
-            font-size: 1.1rem;
-        }
-        h2 {
-            font-size: 1.8rem;
-            margin-top: 3rem;
-            color: var(--text);
-        }
-        h3 {
-            font-size: 1.4rem;
-            margin-top: 2.5rem;
-        }
-        a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-        a:hover {
-            color: var(--accent-hover);
-            text-decoration: underline;
-        }
-        ul, ol {
-            padding-left: 1.4rem;
-        }
-        pre {
-            background: var(--lightgray);
-            padding: 1rem;
-            border-radius: 6px;
-            overflow-x: auto;
-            font-family: 'JetBrains Mono', monospace;
-        }
-        .image-placeholder {
-            background: #e5e7eb;
-            border: 2px dashed #9ca3af;
-            height: 400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 3rem 0;
-            font-size: 1.1rem;
-            color: var(--gray);
-            border-radius: 8px;
-        }
-        footer {
-            margin-top: 6rem;
-            padding-top: 3rem;
-            border-top: 1px solid #e5e7eb;
-            text-align: center;
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
+        body {margin:0;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;}
+        .container {max-width:720px;margin:0 auto;padding:2rem 1rem;}
+        header {text-align:center;padding:4rem 0 2rem;}
+        h1 {font-size:2.5rem;margin:0 0 0.5rem;font-weight:700;}
+        .post-meta {color:var(--gray);font-size:0.95rem;}
+        .post-meta a {color:var(--accent);text-decoration:none;}
+        .post-meta a:hover {text-decoration:underline;}
+        article {font-size:1.1rem;}
+        h2 {font-size:1.8rem;margin-top:3rem;color:var(--text);}
+        h3 {font-size:1.4rem;margin-top:2.5rem;}
+        a {color:var(--accent);text-decoration:none;}
+        a:hover {color:var(--accent-hover);text-decoration:underline;}
+        ul, ol {padding-left:1.4rem;}
+        .image-placeholder {background:#e5e7eb;border:2px dashed #9ca3af;height:400px;display:flex;align-items:center;justify-content:center;margin:3rem 0;font-size:1.1rem;color:var(--gray);border-radius:8px;}
+        footer {margin-top:6rem;padding-top:3rem;border-top:1px solid #e5e7eb;text-align:center;color:var(--gray);font-size:0.9rem;}
     </style>
 </head>
 <body>
@@ -107,99 +39,107 @@
 <div class="container">
 
     <header>
-        <h1>Building a CubeSat from Scratch Using Amazon Parts</h1>
+        <h1>Building a Real CubeSat from Amazon Parts<br><span style="font-size:1.6rem;font-weight:600;">(and actually launching it)</span></h1>
         <div class="post-meta">
-            Matt Deshon • December 2, 2025 • 
-            <a href="https://www.mattdeshon.com/blog/PLC-Automating-Bottle-Line">Inspired by my PLC bottling line automation project</a>
+            Matt Deshon • December 2, 2025
         </div>
     </header>
 
     <article>
 
-        <p>Hey everyone, welcome back to the blog! If you’ve been following my tinkering adventures, you know I’m all about turning wild ideas into reality with elbow grease, clever hacks, and off-the-shelf components.</p>
+        <p>Here’s the thesis, loud and clear:</p>
+        <p><strong>With a little will, some ingenuity, and a credit card, literally anyone can build and launch a homemade satellite into orbit in 2026 without a six-figure budget or a government grant.</strong></p>
 
-        <p>Today I’m diving into my most ambitious project yet: <strong>building a fully functional, deployable 1U CubeSat from scratch using almost entirely parts you can buy on Amazon</strong>. Yes, a real satellite that could ride to low Earth orbit and phone home on ham radio frequencies.</p>
+        <p>I’m doing it right now. This is the real-time build log.</p>
 
         <div class="image-placeholder">
-            [Insert Picture: High-level sketch or photo of a 1U CubeSat frame with solar panels mocked up]
+            [Insert Picture: 1U CubeSat frame mock-up with solar panels and deployed antenna]
         </div>
 
-        <h2>Why Build a CubeSat?</h2>
-        <p>My goal is simple: a deployer-compatible 1U CubeSat that deploys an antenna, collects basic telemetry (temperature, GPS, attitude), and beacons it back on UHF/VHF amateur bands. Total budget under $2,000, built on weekends over 12–18 months.</p>
-
-        <p>I’m treating the satellite like a “space PLC” — modular subsystems orchestrated by a central controller with rigorous testing and fail-safes — exactly the same mindset I used when <a href="https://www.mattdeshon.com/blog/PLC-Automating-Bottle-Line">automating the honey bottling line</a>.</p>
-
-        <h2>Sourcing Everything on Amazon (Mostly)</h2>
-        <p>No cleanrooms, no AS9100 vendors — just rugged, space-ish parts that overperform for the price. Here’s the core shopping list:</p>
-
+        <h2>The Goal</h2>
+        <p>A fully deployer-compatible 1U CubeSat that:</p>
         <ul>
-            <li><strong>Structure</strong>: 6061 aluminum square tubing + 3D-printed endplates (~$50)</li>
-            <li><strong>Power</strong>: 18650 cells, TP4056 chargers, 5V flexible solar panels, tiny MPPT (~$80)</li>
-            <li><strong>OBC</strong>: Raspberry Pi Zero W or ESP32 (potted in epoxy for radiation tolerance) (~$20)</li>
-            <li><strong>Comms</strong>: Si4463 UHF/VHF transceiver + nitinol deployable dipole (~$40)</li>
-            <li><strong>Sensors</strong>: BMP280, MPU6050, small camera module (~$30)</li>
-            <li><strong>Deployment</strong>: Spring-loaded hinges & nichrome burn-wire release (~$25)</li>
+            <li>Deploys a nitinol tape-spring antenna 30 minutes after ejection</li>
+            <li>Collects temperature, voltage, gyro, and GPS fix</li>
+            <li>Beacons everything on 70 cm amateur band every 60 seconds</li>
+            <li>Survives launch on a Falcon 9 or Rocket Lab rideshare</li>
+        </ul>
+        <p>Target cost for the satellite itself: <strong>under $2,000</strong>. Launch slot: another ~$15k–$30k via aggregators (still cheaper than a new car).</p>
+
+        <h2>Core Philosophy: The Satellite Is Just a Space PLC</h2>
+        <p>That’s not a joke. I’m treating the entire bird like an industrial controller floating in vacuum:</p>
+        <ul>
+            <li>One central brain (STM32F411RE “Black Pill”)</li>
+            <li>Modular I/O (sensors, radio, power)</li>
+            <li>Watchdog timers everywhere</li>
+            <li>Relentless ground testing until it’s bulletproof</li>
+        </ul>
+        <p>If a $300 Allen-Bradley Micro820 can run a factory 24/7, a $7 STM32 can survive orbit.</p>
+
+        <h2>Parts List – Almost Entirely Amazon Prime</h2>
+        <ul>
+            <li><strong>Structure</strong>: 6061 square tubing + 3D-printed corners (~$60)</li>
+            <li><strong>Brain</strong>: STM32F411RE Black Pill (100 MHz ARM Cortex-M4, 512 KB flash) (~$7)</li>
+            <li><strong>Power</strong>: 4× 18650 cells, TP4056 chargers, 5 V flexible solar panels, tiny MPPT (~$90)</li>
+            <li><strong>Radio</strong>: Dorji DRF4463D20 Si4463 module + nitinol deployable dipole (~$45)</li>
+            <li><strong>Sensors</strong>: BMP280, ICM-20948 9-DOF, OV2640 camera module (~$40)</li>
+            <li><strong>Deployment</strong>: Nichrome burn-wire + spring-loaded antenna canister (~$30)</li>
+        </ul>
+        <p><strong>Grand total for flight hardware: ~$350</strong></p>
+
+        <div class="image-placeholder">
+            [Insert Picture: Flat-lay of all Amazon parts neatly organized by subsystem]
+        </div>
+
+        <h2>Design Reference – The Classic CubeSat Block Diagram</h2>
+        <p>Everything follows the pinned chart I’ve had on my wall for years: EPS → OBC → CDH → Comms → Payload → Thermal/Structure. Power and data flow exactly like the diagram, except every block is a $5–$20 Amazon part.</p>
+
+        <div class="image-placeholder">
+            [Insert Picture: The pinned CubeSat subsystem chart with my handwritten Amazon-part labels]
+        </div>
+
+        <h2>Project Timeline – Breadboard to Orbit</h2>
+
+        <h3>Phase 1: Prototype (Now – Feb 2026)</h3>
+        <ul>
+            <li>STM32 flight software in C (FreeRTOS + watchdog hell)</li>
+            <li>Burn-wire + antenna deployment on the bench</li>
+            <li>First “hello world” packets received on RTL-SDR</li>
         </ul>
 
-        <p><strong>Running total: ~$245</strong> — the rest goes to DIY vacuum/thermal test gear.</p>
-
-        <div class="image-placeholder">
-            [Insert Picture: Flat-lay of all the Amazon parts organized by subsystem]
-        </div>
-
-        <h2>Design Foundation – The Pinned CubeSat Block Diagram</h2>
-        <p>I’m following the classic CubeSat subsystem chart I’ve had pinned for years (the one with power → EPS → OBC → ADCS → comms → payload loops). Everything routes through the OBC like a CompactLogix PLC polling I/O.</p>
-
-        <div class="image-placeholder">
-            [Insert Picture: Screenshot/recreation of the pinned CubeSat design chart with my Amazon-part annotations]
-        </div>
-
-        <h2>Project Plan – From Breadboard to Orbit</h2>
-
-        <h3>Phase 1: Design & Prototyping (Months 1–3)</h3>
+        <h3>Phase 2: Full Stack-Up (Mar – Jun 2026)</h3>
         <ul>
-            <li>KiCad schematics</li>
-            <li>Breadboard OBC + radio</li>
-            <li>3D-print mock frame</li>
-            <li>Milestone: “Hello world” beacon received on ground station</li>
-        </ul>
-
-        <h3>Phase 2: Assembly & Integration (Months 4–6)</h3>
-        <ul>
-            <li>Weld/bond aluminum frame</li>
-            <li>Solder power & sensor PCBs</li>
-            <li>MicroPython flight software with deployment logic</li>
-            <li>Build nitinol antenna canister + burn-wire release</li>
-            <li>Milestone: Fully stacked CubeSat running 24h stress test</li>
-        </ul>
-
-        <div class="image-placeholder">
-            [Insert Picture: Step-by-step assembly photos – frame, wiring harness, antenna deployment test]
-        </div>
-
-        <h3>Phase 3: Environmental Testing (Months 7–9)</h3>
-        <ul>
-            <li>Vibration table (modified subwoofer)</li>
-            <li>Thermal-vacuum chamber (pressure-cooker + fridge)</li>
-            <li>EMI and basic radiation hardening checks</li>
-            <li>Milestone: Survives full launch-to-LEO simulation</li>
+            <li>Machine aluminum rails</li>
+            <li>Custom PCBs for power and sensor breakout</li>
+            <li>24-hour thermal stress test in the freezer/toaster-oven rig</li>
         </ul>
 
         <div class="image-placeholder">
-            [Insert Picture: Testing montage – vibration, vacuum chamber, thermal cycle graphs]
+            [Insert Picture: Assembly sequence – frame, wiring, antenna deploy test on desk]
         </div>
 
-        <h3>Phase 4: Certification & Launch (Months 10+)</h3>
+        <h3>Phase 3: Environmental Testing (Jul – Sep 2026)</h3>
         <ul>
-            <li>Submit to CubeSat standard reviews</li>
-            <li>Integrate with P-POD style deployer</li>
-            <li>Hunt for rideshare slot (SpaceX, Rocket Lab, or university aggregator)</li>
+            <li>DIY shake table (subwoofer + sine wave)</li>
+            <li>Thermal-vac chamber (pressure cooker + peltier + pump)</li>
+            <li>Full random-vibe + TVAC campaign until nothing breaks</li>
         </ul>
 
-        <h2>Final Thoughts</h2>
-        <p>This project is proof that space is becoming democratized. With Amazon parts, a PLC-style control philosophy, and relentless ground testing, a hobbyist really can build something that flies 500 km above Earth.</p>
+        <div class="image-placeholder">
+            [Insert Picture: Testing montage – vibration rig, vacuum chamber glowing red, data logs]
+        </div>
 
-        <p>Next post will have schematics and early code. If you’re into amateur radio, CubeSats, or just insane side projects — let me know in the comments!</p>
+        <h3>Phase 4: Launch (Late 2026)</h3>
+        <ul>
+            <li>Paperwork for ITU frequency coordination & IARU</li>
+            <li>Hand it off to an aggregator (Nanoracks successor, Exolaunch, etc.)</li>
+            <li>Watch it ride on someone else’s rocket</li>
+        </ul>
+
+        <h2>Bottom Line</h2>
+        <p>2026 is the year the “garage CubeSat” stops being a meme. The parts are on Amazon today. The rideshares are booking now. The deployers are standardized.</p>
+        <p>All that’s left is someone stubborn enough to solder it together and click “Buy Now” on a launch slot.</p>
+        <p>That someone is me. Want to be next?</p>
 
         <p>Clear orbits,<br>Matt</p>
 
