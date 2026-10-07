@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reverse Engineering a Kawasaki Industrial Robot and Building a Custom Controller – Matt Deshon</title>
+
+    <meta name="description" content="Reverse engineering a Kawasaki BA006L industrial robot arm and designing a custom ROS 2, EtherCAT, MATLAB, and DIY servo controller to bring the robot back to life.">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #1a1a1a;
+            --gray: #666666;
+            --lightgray: #f4f4f4;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 4rem 0 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 0 0 0.5rem;
+            font-weight: 700;
+        }
+
+        .post-meta {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .post-meta a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .post-meta a:hover {
+            text-decoration: underline;
+        }
+
+        article {
+            font-size: 1.1rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 3rem;
+            color: var(--text);
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 2.5rem;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            padding-left: 1.4rem;
+        }
+
+        pre {
+            background: var(--lightgray);
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .image-placeholder {
+            background: #e5e7eb;
+            border: 2px dashed #9ca3af;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 3rem 0;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--gray);
+            border-radius: 8px;
+        }
+
+        .engineering-note {
+            background: var(--lightgray);
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.25rem;
+            margin: 2rem 0;
+            border-radius: 4px;
+        }
+
+        footer {
+            margin-top: 6rem;
+            padding-top: 3rem;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>Reverse Engineering a Kawasaki Industrial Robot and Building My Own Controller</h1>
+
+        <div class="post-meta">
+            Matt Deshon • October 7, 2026
+        </div>
+    </header>
+
+    <article>
+
+        <p>
+            One of my more ambitious controls projects started with a used Kawasaki industrial robot arm,
+            a pile of incomplete documentation, some controller backups, and one major problem:
+            <strong>I did not have a practical way to run the robot.</strong>
+        </p>
+
+        <p>
+            The robot is a <strong>Kawasaki BA006L-A</strong>, a six-axis industrial arm originally designed
+            for applications such as arc welding and automated material handling. Instead of trying to return
+            the machine to its original factory configuration at any cost, I decided to approach it as a
+            reverse engineering project.
+        </p>
+
+        <p>
+            The goal is now to preserve the original mechanical arm, motors, brakes, encoders, gearboxes,
+            and internal wiring while replacing the original motion-control system with a modern controller
+            built around <strong>ROS 2, EtherCAT, MATLAB, custom servo electronics, and a new control cabinet.</strong>
+        </p>
+
+        <div class="image-placeholder">
+            [Insert Picture: Full view of the Kawasaki BA006L robot arm as purchased. A clean front or three-quarter view showing the complete robot works best.]
+        </div>
+
+
+        <h2>Starting with an Unknown Industrial Robot</h2>
+
+        <p>
+            Used industrial robots can be deceptively inexpensive. The robot itself may cost less than many
+            hobby CNC machines, but the controller, teach pendant, proprietary cables, software, and replacement
+            components can quickly become the expensive part of the project.
+        </p>
+
+        <p>
+            My BA006L came with enough information to identify the robot and original controller family, but
+            bringing it back into service meant understanding several systems at the same time:
+        </p>
+
+        <ul>
+            <li>Six AC servo motors and their mechanical brakes</li>
+            <li>Battery-backed absolute encoders</li>
+            <li>Motor power wiring</li>
+            <li>Encoder and signal wiring</li>
+            <li>Robot mastering and zero-position data</li>
+            <li>Safety circuitry</li>
+            <li>Servo drive requirements</li>
+            <li>Motion-control software</li>
+        </ul>
+
+        <p>
+            The project quickly became less about simply “making the robot move” and more about reconstructing
+            enough of the machine's original architecture to safely replace it.
+        </p>
+
+        <div class="image-placeholder">
+            [Insert Picture: Close-up of the robot base showing the X3A and X4A connectors, cable panel, and identification plate.]
+        </div>
+
+
+        <h2>Reverse Engineering the Robot Wiring</h2>
+
+        <p>
+            The first major task was determining what the large robot-side connectors actually carried.
+            Kawasaki separates the arm wiring into two major harnesses.
+        </p>
+
+        <pre>
+X3 / X3A
+Encoder signals
+Absolute position data
+Battery and encoder power
+Limit and auxiliary signals
+
+X4 / X4A
+Three-phase motor power
+Mechanical brake circuits
+Motor temperature signals
+Auxiliary wiring
+Protective earth
+        </pre>
+
+        <p>
+            That distinction is important. X3 is largely low-level signal and encoder wiring, while X4 carries
+            motor and brake power. Mixing assumptions between the two could damage expensive encoder electronics
+            or motor hardware.
+        </p>
+
+        <p>
+            I began building pin maps from Kawasaki documentation, controller information, photographs, and
+            continuity information. One example is the JT1 motor phase wiring:
+        </p>
+
+        <pre>
+JT1 Motor
+
+X4A-1   -> U
+X4A-13  -> V
+X4A-25  -> W
+
+JT1 Brake
+
+X4A-37
+X4A-49
+        </pre>
+
+        <p>
+            The encoder side was traced separately. JT1 uses the first encoder pair on X3A, with the other
+            axes following the same general connector organization.
+        </p>
+
+        <div class="engineering-note">
+            <strong>Important:</strong> Nothing gets energized simply because a pin number appears in a drawing.
+            The final wiring will be continuity checked against the physical robot before power is ever applied.
+            One of the recovered X4 references even appears to contain a JT5 labeling error, which is exactly
+            why reverse engineering industrial hardware requires verification instead of assumption.
+        </div>
+
+        <div class="image-placeholder">
+            [Insert Picture: X3A and X4A connector close-ups. Ideally label the photo with arrows showing Encoder/Signal and Motor/Brake.]
+        </div>
+
+
+        <h2>Identifying the Servo Motors</h2>
+
+        <p>
+            Motor identification is one of the most important parts of the retrofit because the servo amplifier,
+            encoder interface, current limits, and control algorithms all depend on the motor characteristics.
+        </p>
+
+        <p>
+            JT1 and JT2 have now been positively identified as:
+        </p>
+
+        <pre>
+Manufacturer: Sanyo Denki
+Family:       SANMOTION R
+Model:        R2AA13120LCP2F
+Power:        1.2 kW
+Rated Speed:  2000 RPM
+Rated Torque: 5.7 Nm
+Rated Current: 7.6 Arms
+Kawasaki P/N: 50601-0144
+        </pre>
+
+        <p>
+            These motors use battery-backed absolute encoders, which is one reason I want to preserve the
+            factory motors instead of replacing the entire servo system.
+        </p>
+
+        <p>
+            Based on Kawasaki motor documentation, the remaining joints use progressively smaller motors,
+            including approximately 500 watt, 100 watt, and sub-100 watt motors as the arm gets closer to the wrist.
+            I am still verifying the exact suffixes and encoder variants for those motors before freezing the drive design.
+        </p>
+
+        <div class="image-placeholder">
+            [Insert Picture: Clear close-up of the Sanyo Denki R2AA13120LCP2F motor label on JT1 or JT2.]
+        </div>
+
+
+        <h2>Recovering the Original Robot Configuration</h2>
+
+        <p>
+            One major advantage is that I have backups from the original Kawasaki controller. These files provide
+            valuable information about the original robot configuration, servo channels, braking configuration,
+            and mastering data.
+        </p>
+
+        <p>
+            The recovered six-axis zeroing values are being preserved as commissioning data:
+        </p>
+
+        <pre>
+JT1: 268429114
+JT2: 268433895
+JT3: 268430376
+JT4: 268432453
+JT5: 268434324
+JT6: 268434218
+        </pre>
+
+        <p>
+            Those numbers are not something I plan to blindly write into a new controller. They are reference data
+            that can help reconstruct the robot's original mastered position once the encoder interface is operating.
+        </p>
+
+        <div class="image-placeholder">
+            [Insert Picture: Screenshot of the original Kawasaki backup directory or configuration files. Hide any information you do not want publicly visible.]
+        </div>
+
+
+        <h2>Building the Software Stack Before the Hardware</h2>
+
+        <p>
+            Rather than waiting until the new electronics exist, I built the motion-control software first.
+            The current development environment uses <strong>ROS 2 Jazzy on Ubuntu 24.04 with a PREEMPT_RT kernel.</strong>
+        </p>
+
+        <p>
+            The robot model, joint limits, MoveIt configuration, ros2_control hardware layer, trajectory controller,
+            status handling, and commissioning tools are already running in simulation.
+        </p>
+
+        <pre>
+MATLAB Workstation
+       |
+       | ROS 2
+       v
+MoveIt 2
+       |
+MoveIt Servo
+       |
+ros2_control
+       |
+BA006L Hardware Interface
+       |
+Current: Emulator
+Future: EtherCAT Servo Controller
+        </pre>
+
+        <p>
+            This architecture lets me develop most of the robot software without applying power to the real machine.
+            A custom emulator currently behaves like the future controller, allowing trajectory execution,
+            joint-state feedback, fault testing, watchdog testing, and communication-loss testing.
+        </p>
+
+        <p>
+            I have already verified the complete jogging path through ROS:
+        </p>
+
+        <pre>
+Joint Jog Command
+      ->
+Safety / Jog Gate
+      ->
+MoveIt Servo
+      ->
+Trajectory Controller
+      ->
+BA006L Emulator
+        </pre>
+
+        <div class="image-placeholder">
+            [Insert Picture: RViz screenshot showing the BA006L robot model, joint states, and MoveIt interface.]
+        </div>
+
+
+        <h2>MATLAB as the Engineering Workstation</h2>
+
+        <p>
+            MATLAB has become the engineering and commissioning side of the system. I have been using it for
+            ROS communication, robot kinematics, drive calculations, motor modeling, and a custom workstation GUI.
+        </p>
+
+        <p>
+            The MATLAB workstation can already publish ROS 2 joint-jog commands to the Linux controller and receive
+            feedback from the simulated robot.
+        </p>
+
+        <p>
+            The next major use for MATLAB has been determining whether the original 200 volt-class motors can be
+            operated from a much lower DC bus at reduced speed.
+        </p>
+
+        <div class="image-placeholder">
+            [Insert Picture: MATLAB GUI or MATLAB plot from the BA006L motor/drive sizing scripts.]
+        </div>
+
+
+        <h2>Why I Decided Not to Buy Six Commercial Servo Drives</h2>
+
+        <p>
+            My first design used six commercial EtherCAT servo amplifiers. Technically, that would be the simplest
+            solution. Financially, it changed the project completely.
+        </p>
+
+        <p>
+            By the time six compatible drives, safety hardware, power supplies, regeneration hardware, and cabinet
+            components were added together, the servo-drive portion alone could easily reach several thousand dollars.
+        </p>
+
+        <p>
+            That led to a much more interesting engineering decision:
+        </p>
+
+        <p>
+            <strong>Design the servo controllers myself.</strong>
+        </p>
+
+        <p>
+            Instead of reproducing the original Kawasaki 200 VAC servo system, I am investigating a lower-voltage
+            architecture designed around the way I actually intend to use the robot.
+        </p>
+
+
+        <h2>A 48 Volt Servo System</h2>
+
+        <p>
+            This robot is not going back onto a high-speed automotive production line. During development, I expect
+            to operate it at a fraction of its original speed.
+        </p>
+
+        <p>
+            That changes the drive problem considerably.
+        </p>
+
+        <p>
+            The proposed architecture is now:
+        </p>
+
+        <pre>
+208 VAC Single Phase
+        |
+Isolated 48 VDC Power Supply
+        |
+48 VDC Servo Bus
+        |
++-------+-------+-------+-------+-------+-------+
+|       |       |       |       |       |
+JT1     JT2     JT3     JT4     JT5     JT6
+Drive   Drive   Drive   Drive   Drive   Drive
+|       |       |       |       |       |
++--------------- Kawasaki BA006L ----------------+
+        </pre>
+
+        <p>
+            Each axis will eventually have its own three-phase MOSFET inverter, current sensing, encoder interface,
+            gate driver, brake control, fault monitoring, and real-time motor-control processor.
+        </p>
+
+        <p>
+            A central EtherCAT controller will connect those axes to ROS 2.
+        </p>
+
+        <div class="image-placeholder">
+            [Insert Picture: Block diagram showing 208 VAC -> 48 V power supply -> six DIY servo drives -> Kawasaki robot. A clean engineering diagram would work well here.]
+        </div>
+
+
+        <h2>Testing the 48 Volt Idea in MATLAB</h2>
+
+        <p>
+            Before drawing a circuit board, I wanted to know whether a 48 volt DC bus was even reasonable for the
+            large 1.2 kW JT1 and JT2 motors.
+        </p>
+
+        <p>
+            The initial MATLAB model used the known motor parameters:
+        </p>
+
+        <pre>
+Rated Torque:              5.7 Nm
+Rated Current:             7.6 Arms
+Peak Current:              26.5 Arms
+Torque Constant:           0.77 Nm/Arms
+Phase Resistance:          0.35 ohm
+Electrical Time Constant:  15 ms
+Estimated Phase Inductance: 5.25 mH
+        </pre>
+
+        <p>
+            I modeled 48, 60, and 72 volt DC buses while accounting for winding resistance, winding inductance,
+            back EMF, electrical frequency, and SVPWM voltage limits.
+        </p>
+
+        <p>
+            The results were encouraging.
+        </p>
+
+        <pre>
+48 VDC BUS
+
+At 100 RPM:
+Large voltage margin available
+
+At 200 RPM:
+Large voltage margin available
+
+At 400 RPM:
+Full rated torque remains practical
+
+Around 500 RPM:
+Voltage margin begins becoming dependent on motor pole count
+        </pre>
+
+        <p>
+            For a robot I expect to initially operate around 5 to 10 percent of original rated speed,
+            48 volts appears to be a practical starting point.
+        </p>
+
+        <div class="image-placeholder">
+            [Insert Picture: MATLAB graph titled "JT1/JT2 Rated-Torque Speed vs DC Bus Voltage" showing the 48 V, 60 V, and 72 V curves.]
+        </div>
+
+
+        <h2>Sizing the DIY Power Stage</h2>
+
+        <p>
+            The next MATLAB model looked at the actual inverter requirements.
+        </p>
+
+        <p>
+            The large JT1/JT2 motors require:
+        </p>
+
+        <pre>
+Rated Phase Current:       7.6 Arms
+Rated Sinusoidal Peak:     10.75 A
+
+Published Peak Current:    26.5 Arms
+Peak Sinusoidal Current:   37.48 Apeak
+        </pre>
+
+        <p>
+            With engineering margin, the preliminary drive target is:
+        </p>
+
+        <pre>
+DC Bus:                    48 V nominal
+
+MOSFET Voltage Class:      100 V
+
+Continuous Phase Current:  >= 12 Arms
+
+Transient Phase Current:   ~55 to 60 A peak
+
+Current Measurement:       +/- 60 A
+
+DC Link Capacitors:        80 V minimum
+                           100 V preferred
+        </pre>
+
+        <p>
+            The 26.5 amp motor rating is a transient peak, not a continuous operating point. At that current,
+            calculated copper loss is roughly 737 watts, which makes current limiting and thermal I²t protection
+            mandatory in the final controller.
+        </p>
+
+        <div class="image-placeholder">
+            [Insert Picture: MATLAB command-window output from the JT1/JT2 DIY inverter sizing calculation, or a clean chart showing phase current and DC bus current.]
+        </div>
+
+
+        <h2>The Future Servo Drive</h2>
+
+        <p>
+            The current concept for each large-axis drive looks roughly like this:
+        </p>
+
+        <pre>
+48 VDC BUS
+    |
+DC Link Capacitors
+    |
+Three-Phase MOSFET Bridge
+    |
+   U V W
+    |
+Sanyo Servo Motor
+
+
+Real-Time MCU
+    |
+    +---- PWM / FOC
+    |
+    +---- Phase Current Sensors
+    |
+    +---- DC Bus Voltage
+    |
+    +---- Absolute Encoder Interface
+    |
+    +---- Brake Control
+    |
+    +---- Temperature / Fault Monitoring
+    |
+    +---- High-Speed Communications
+        </pre>
+
+        <p>
+            Field-oriented control, or FOC, will be performed locally on the axis controller. ROS 2 will not generate
+            MOSFET PWM directly. The Linux system will command motion, while the dedicated motor controller closes
+            the high-speed current and velocity loops.
+        </p>
+
+        <p>
+            That separation is important. Linux and ROS are excellent for planning, kinematics, trajectory generation,
+            diagnostics, and high-level control. The servo-current loop belongs on deterministic embedded hardware.
+        </p>
+
+
+        <h2>NI Multisim and Circuit Design</h2>
+
+        <p>
+            I have also added <strong>NI Circuit Design Suite 14.1</strong> to the project environment.
+            Multisim will be used to develop and test the electronics before committing to real hardware.
+        </p>
+
+        <p>
+            The first circuit will be a single 48 volt MOSFET half-bridge driving an electrical model of the
+            JT1/JT2 motor winding:
+        </p>
+
+        <pre>
+Motor Winding Model
+
+Resistance:   0.35 ohm
+Inductance:   5.25 mH
+        </pre>
+
+        <p>
+            Once one half-bridge is behaving correctly, the simulation will expand to a complete three-phase inverter,
+            current sensing, gate-driver circuitry, overcurrent protection, DC bus monitoring, and eventually a
+            full motor-control stage.
+        </p>
+
+        <div class="image-placeholder">
+            [Insert Picture Later: Multisim screenshot showing the 48 V DC bus, MOSFET half-bridge, current probe, motor winding model, and oscilloscope.]
+        </div>
+
+
+        <h2>Designing the New Control Cabinet</h2>
+
+        <p>
+            In parallel with the electronics, I am designing a completely new control cabinet using
+            <strong>SOLIDWORKS xDesign</strong>.
+        </p>
+
+        <p>
+            The preliminary cabinet study is approximately:
+        </p>
+
+        <pre>
+Width:   800 mm
+Height: 1000 mm
+Depth:   300 mm
+
+Backplate:
+700 mm x 900 mm
+        </pre>
+
+        <p>
+            The cabinet will eventually contain the 48 volt servo supply, six axis controllers, safety hardware,
+            control power supplies, industrial computer, EtherCAT networking, braking hardware, terminal blocks,
+            wiring duct, and cooling components.
+        </p>
+
+        <div class="image-placeholder">
+            [Insert Picture: SOLIDWORKS xDesign screenshot of the cabinet assembly with six servo-drive locations, DIN rail, wiring duct, power supply, safety hardware, and IPC.]
+        </div>
+
+
+        <h2>Safety Still Stays Hardware-Based</h2>
+
+        <p>
+            One part of this project I am not moving into ROS software is the primary personnel safety system.
+        </p>
+
+        <p>
+            The intended safety architecture will use hardwired components for E-stop and drive disable functions.
+            ROS will be able to monitor safety state, but software running on a general-purpose operating system will
+            not be the only thing preventing motor torque.
+        </p>
+
+        <pre>
+Emergency Stop
+      |
+Dual-Channel Safety Circuit
+      |
+      +---- Main Servo Power Contactor
+      |
+      +---- Hardware Drive Disable
+                |
+                +---- Axis Drives
+        </pre>
+
+        <p>
+            Brake control will also follow a defined sequence. The mechanical brakes are holding brakes,
+            not substitutes for controlled deceleration.
+        </p>
+
+
+        <h2>Where the Project Stands Today</h2>
+
+        <p>
+            At this point the project has progressed well beyond simply owning an old robot arm.
+        </p>
+
+        <ul>
+            <li>The BA006L robot model has been recreated for ROS 2.</li>
+            <li>MoveIt and ros2_control are running.</li>
+            <li>Joint jogging works through the software stack using the emulator.</li>
+            <li>MATLAB communicates with the ROS 2 controller.</li>
+            <li>The original Kawasaki configuration and mastering data have been recovered.</li>
+            <li>X3A encoder/signal wiring has been mapped.</li>
+            <li>X4A motor/brake wiring has been mapped.</li>
+            <li>JT1 and JT2 motors have been positively identified.</li>
+            <li>The 48 volt reduced-speed servo concept has passed initial MATLAB feasibility analysis.</li>
+            <li>Preliminary JT1/JT2 inverter current requirements have been calculated.</li>
+            <li>The new controller cabinet has been started in SOLIDWORKS xDesign.</li>
+            <li>NI Multisim is ready for the first physical drive-circuit simulations.</li>
+        </ul>
+
+
+        <h2>What Comes Next</h2>
+
+        <p>
+            The next phase moves from system architecture into actual power electronics.
+        </p>
+
+        <ol>
+            <li>Simulate one 48 volt MOSFET half-bridge in Multisim.</li>
+            <li>Expand it into a complete three-phase inverter.</li>
+            <li>Select real 100 volt MOSFETs and gate-driver hardware.</li>
+            <li>Design phase-current sensing and hardware overcurrent protection.</li>
+            <li>Reverse engineer and prototype the Sanyo absolute encoder interface.</li>
+            <li>Build one low-power prototype servo axis.</li>
+            <li>Bench-test motor-control firmware before connecting the robot.</li>
+            <li>Test one smaller robot joint at limited current.</li>
+            <li>Scale the design for JT1 and JT2.</li>
+            <li>Integrate the completed controller with ROS 2 over EtherCAT.</li>
+        </ol>
+
+        <div class="image-placeholder">
+            [Insert Picture: Project roadmap graphic showing Reverse Engineering -> MATLAB Modeling -> Multisim -> PCB -> Bench Test -> Robot Joint Test -> EtherCAT -> Full ROS 2 Integration.]
+        </div>
+
+
+        <h2>Final Thoughts</h2>
+
+        <p>
+            What started as a used industrial robot has turned into a project that touches nearly every part of
+            modern controls engineering: robotics, embedded systems, industrial networking, servo control,
+            power electronics, CAD, safety systems, real-time Linux, and software architecture.
+        </p>
+
+        <p>
+            The interesting part is not simply getting the BA006L to move again. Buying a complete replacement
+            controller could accomplish that.
+        </p>
+
+        <p>
+            The real project is understanding the machine well enough to replace its original control system
+            with one designed from the ground up, while preserving the precision mechanical hardware Kawasaki
+            originally built into the arm.
+        </p>
+
+        <p>
+            There is still a lot of engineering between the current simulation and a powered robot.
+            The encoder interface, inverter hardware, brake controls, PCB design, thermal management, regeneration,
+            safety hardware, and physical commissioning all still need to be completed and tested.
+        </p>
+
+        <p>
+            That is also what makes the project worth doing.
+        </p>
+
+        <p>
+            The next update will move into the electronics side as I start building and simulating the first
+            48 volt servo inverter in NI Multisim.
+        </p>
+
+        <p>
+            More to come,<br>
+            Matt
+        </p>
+
+    </article>
+
+    <footer>
+        © 2026 Matt Deshon • All rights reserved
+    </footer>
+
+</div>
+
+</body>
+</html>
